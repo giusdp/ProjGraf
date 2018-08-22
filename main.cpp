@@ -1,13 +1,16 @@
 #include <cmath>
 #include <iostream>
 #include "controller.h"
+#include "terrain.h"
+#include "texture.h"
+#include "skybox.h"
 
-#define CAMERA_BACK_CAR 0
-#define CAMERA_MOUSE 1
+#define FREE_MODE 0
+#define PLAY_MODE 1
 
 bool useWireframe = false;
-bool useEnvmap = true;
-bool useShadow = true;
+bool useEnvmap = false;
+bool useShadow = false;
 
 int scrW = 800, scrH = 600; // altezza e larghezza viewport (in pixels)
 
@@ -21,6 +24,10 @@ int nstep = 0;                     // numero di passi di FISICA fatti fin'ora
 const int PHYS_SAMPLING_STEP = 10; // numero di millisec che un passo di fisica simula
 
 int cameraType = 1;
+
+Texture texturePlane;
+Terrain *terrain;
+SkyBox *sky;
 
 // setto la posizione della camera
 void setCamera(Plane plane) {
@@ -36,14 +43,14 @@ void setCamera(Plane plane) {
     double cosff, sinff;
 
 
-    float viewAlpha=20, viewBeta=40; // angoli che definiscono la vista
-    float eyeDist=10.0; // distanza dell'occhio dall'origine
+    float viewAlpha = 20, viewBeta = 40; // angoli che definiscono la vista
+    float eyeDist = 10.0; // distanza dell'occhio dall'origine
 
     // controllo la posizione della camera a seconda dell'opzione selezionata
     switch (cameraType) {
-        case CAMERA_BACK_CAR:
-            camd = 50;
-            camh = 15.0;
+        case FREE_MODE:
+            camd = 10;
+            camh = 5;
             ex = px + camd * sinf;
             ey = py + camh;
             ez = pz + camd * cosf;
@@ -52,10 +59,10 @@ void setCamera(Plane plane) {
             cz = pz - camd * cosf;
             gluLookAt(ex, ey, ez, cx, cy, cz, 0.0, 1.0, 0.0);
             break;
-        case CAMERA_MOUSE:
-            glTranslatef(0,0,-eyeDist);
-            glRotatef(viewBeta,  1,0,0);
-            glRotatef(viewAlpha, 0,1,0);
+        case PLAY_MODE:
+            glTranslatef(0, -7, -eyeDist);
+            // glRotatef(viewBeta,  1,0,0);
+            //glRotatef(viewAlpha, 0,1,0);
             break;
         default:
             break;
@@ -87,7 +94,7 @@ void render(SDL_Window *win, Plane plane) {
 
     // riempe tutto lo screen buffer di pixel color sfondo
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(1,1,1, 1);
+    glClearColor(1, 1, 1, 1);
 
     // setto la posizione luce
     float tmpv[4] = {0, 1, 2, 0}; // ultima comp=0 => luce direzionale
@@ -103,45 +110,28 @@ void render(SDL_Window *win, Plane plane) {
     glEnable(GL_LIGHTING);
 
     // settiamo matrice di modellazione
-    // TODO drawSky(); // disegna il cielo come sfondo
+    sky->render(); // disegna il cielo come sfondo
 
     // TODO drawFloor(); // disegna il suolo
     // TODO drawPista(); // disegna la pista
 
-    plane.Render(); // disegna la macchina
+    terrain->render(); // disegna il terreno
+    plane.Render(); // disegna il giocatore
 
     // attendiamo la fine della rasterizzazione di
     // tutte le primitive mandate
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
 
-    // disegnamo i fps (frame x sec) come una barra a sinistra.
-    // (vuota = 0 fps, piena = 100 fps)
-    // TODO SetCoordToPixel();
-
-    /*
-    glBegin(GL_QUADS);
-    float y = scrH * fps / 100;
-    float ramp = fps / 100;
-    glColor3f(1 - ramp, 0, ramp);
-    glVertex2d(10, 0);
-    glVertex2d(10, y);
-    glVertex2d(0, y);
-    glVertex2d(0, 0);
-    glEnd();
-    */
-
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
 
-    glFinish();
+    glFlush();
     // ho finito: buffer di lavoro diventa visibile
     SDL_GL_SwapWindow(win);
 }
 
 int main(int argc, char *argv[]) {
-    //Plane *plane = new Plane(Mesh((char *) "Ferrari_chassis.obj"));// l'aereoplanino
-    Plane *plane = new Plane(Mesh((char *) "Assets/lowpolyplane.obj"));// l'aereoplanino
     SDL_Window *win;
     SDL_GLContext mainContext;
     Uint32 windowID;
@@ -171,14 +161,20 @@ int main(int argc, char *argv[]) {
     glEnable(GL_POLYGON_OFFSET_FILL); // sposta frammenti generati dalla
     glPolygonOffset(1, 1);            // rasterizzazione poligoni indietro di 1
 
-    //if (!LoadTexture(0,(char *)"logo.jpg")) return 0;
     //if (!LoadTexture(1,(char *)"envmap_flipped.jpg")) return 0;
-    //if (!LoadTexture(2,(char *)"sky_ok.jpg")) return -1;
+    //if (!LoadTexture(2,(char *)"logo.jpg")) return -1;
+
+    //Plane *plane = new Plane(Mesh((char *) "Ferrari_chassis.obj"));// l'aereoplanino
+    Plane *plane = new Plane(Mesh((char *) "Assets/lowpolyplane.obj"));// l'aereoplanino
+    terrain = new Terrain();
+    //sky = new SkyBox((char *)"Assets/sky_ok.jpg");
+    sky = new SkyBox((char *) "Assets/hills_ft.tga");
 
     //Creo il controller per gestire gli input con il Command Pattern
     Controller controller = Controller();
     bool done = false;
     SDL_EventState(SDL_MOUSEMOTION, SDL_DISABLE); // Per non floodare la coda
+
     std::cout << "Game loop avviato." << std::endl;
     while (!done) {
         SDL_Event e;
@@ -194,7 +190,10 @@ int main(int argc, char *argv[]) {
                     if (e.key.keysym.sym == SDLK_ESCAPE) {
                         std::cout << "ESC premuto" << std::endl;
                         done = true;
-                    }
+                    } else if (e.key.keysym.sym == 'c') cameraType = !cameraType;
+                    else if (e.key.keysym.sym == 'v') useWireframe = !useWireframe;
+                    else if (e.key.keysym.sym == 'b') useEnvmap = !useEnvmap;
+                    else if (e.key.keysym.sym == 'n') useShadow = !useShadow;
                     controller.handleInputs(plane, e, true);
                     break;
                 case SDL_KEYUP:
@@ -262,7 +261,7 @@ int main(int argc, char *argv[]) {
     }
     std::cout << "Uscito dal game loop." << std::endl;
 
-    delete plane;
+    delete plane, terrain, sky;
     SDL_GL_DeleteContext(mainContext);
     SDL_DestroyWindow(win);
     SDL_Quit();

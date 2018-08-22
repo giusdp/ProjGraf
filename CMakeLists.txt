@@ -3,7 +3,7 @@ project(ProjGraf)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(ProjGraf main.cpp controller.h controller.cpp mesh.cpp mesh.h plane.h plane.cpp point3.h)
+add_executable(ProjGraf main.cpp controller.h controller.cpp mesh.cpp mesh.h plane.h plane.cpp terrain.cpp terrain.h point3.h perlinnoise.cpp perlinnoise.h HUD.cpp HUD.h texture.cpp texture.h skybox.cpp skybox.h utils.h meteorshower.cpp meteorshower.h)
 
 INCLUDE(FindPkgConfig)
 

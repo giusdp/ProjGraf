@@ -1,22 +1,28 @@
 #include <iostream>
 #include "plane.h"
 
+#define FREE_MODE 0
+#define PLAY_MODE 1
 
 extern bool useEnvmap; // var globale esterna: per usare l'evnrionment mapping
-extern bool useHeadlight; // var globale esterna: per usare i fari
 extern bool useShadow; // var globale esterna: per generare l'ombra
+extern int cameraType; // var globale esterna per fare i movimenti opportuni
+
+float turning_rotation_Z = 0, max_turn_Z = 20, turn_speed_Z = 0.5f;
+float turning_rotation_X, turn_speed_X = 0.4f, max_turn_X = 15;
 
 void Plane::Init() {
-    // inizializzo lo stato della macchina
-    px=pz=facing=0; // posizione e orientamento
-    py=0.0;
 
-    mozzoA=mozzoP=sterzo=0;   // stato
-    vx=vy=vz=0;      // velocita' attuale
+    // inizializzo lo stato della macchina
+    px = pz = facing = 0; // posizione e orientamento
+    py = 2.0;
+
+    mozzoA = mozzoP = sterzo = 0;   // stato
+    vx = vy = vz = 0;      // velocita' attuale
 
     //velSterzo=3.4;         // A
-    velSterzo=2;         // A
-    velRitornoSterzo=0.93; // B, sterzo massimo = A*B / (1-B)
+    velSterzo = 2;         // A
+    velRitornoSterzo = 0.93; // B, sterzo massimo = A*B / (1-B)
 
     accMax = 0.0011;
 
@@ -25,17 +31,15 @@ void Plane::Init() {
     // <<1 = attrito grande
     attritoZ = 0.991;  // piccolo attrito sulla Z (nel senso di rotolamento delle ruote)
     attritoX = 0.8;  // grande attrito sulla X (per non fare slittare la macchina)
-    attritoY = 1.0;  // attrito sulla y nullo
+    attritoY = 1;  // attrito sulla y nullo
 
     // Nota: vel max = accMax*attritoZ / (1-attritoZ)
 
-    raggioRuotaA = 0.25;
-    raggioRuotaP = 0.35;
 
     grip = 0.45; // quanto il facing macchina si adegua velocemente allo sterzo
+
 }
 
-float turning_rotation, max_turn = 20;
 // disegna a schermo
 void Plane::Render() {
     // sono nello spazio mondo
@@ -43,25 +47,10 @@ void Plane::Render() {
     glPushMatrix();
 
     glTranslatef(px, py, pz);
-    if (goLeft){
-        turning_rotation += 0.2f;
-    }
-    else if (goRight){
-        turning_rotation -= 0.2f;
-    }
-    else{
-        if (turning_rotation < -0.1f){
-            turning_rotation += 0.2f;
-        }
-        else if (turning_rotation > 0.1f){
-            turning_rotation -= 0.2f;
-        } else turning_rotation = 0;
-    }
-    if (turning_rotation > max_turn) turning_rotation = max_turn;
-    else if (turning_rotation < -max_turn) turning_rotation = -max_turn;
 
     glRotatef(facing, 0, 1, 0);
-    glRotatef(turning_rotation, 0, 0, 1);
+    glRotatef(turning_rotation_Z, 0, 0, 1);
+    glRotatef(turning_rotation_X, 1, 0, 0);
 
     //std::printf("%f %f %f %f \n", px, py, pz, facing);
 
@@ -70,19 +59,17 @@ void Plane::Render() {
 
     RenderAllParts(true);
 
+    // ombra!
+    if (useShadow) {
+        glColor3f(0.4, 0.4, 0.4); // colore fisso
+        glTranslatef(0, 0.01, 0); // alzo l'ombra di un epsilon per evitare z-fighting con il pavimento
+        glScalef(1.01, 0, 1.01);  // appiattisco sulla Y, ingrandisco dell'1% sulla Z e sulla X
+        glDisable(GL_LIGHTING); // niente lighing per l'ombra
+        RenderAllParts(false);  // disegno la macchina appiattita
 
-  // ombra!
-  if(useShadow)
-  {
-    glColor3f(0.4,0.4,0.4); // colore fisso
-    glTranslatef(0,0.01,0); // alzo l'ombra di un epsilon per evitare z-fighting con il pavimento
-    glScalef(1.01,0,1.01);  // appiattisco sulla Y, ingrandisco dell'1% sulla Z e sulla X 
-    glDisable(GL_LIGHTING); // niente lighing per l'ombra
-    RenderAllParts(false);  // disegno la macchina appiattita
-
-    glEnable(GL_LIGHTING);
-  } 
-  glPopMatrix(); 
+        glEnable(GL_LIGHTING);
+    }
+    glPopMatrix();
 
 
     glPopMatrix();
@@ -93,8 +80,84 @@ void Plane::Render() {
 // Indipendente dal rendering.
 //
 // ricordiamoci che possiamo LEGGERE ma mai SCRIVERE
-// la struttura controller da DoStep
+// il controller da DoStep
 void Plane::DoStep() {
+    calcTurningAnimation();
+    if (cameraType == PLAY_MODE) {
+        doStepPlayMode();
+    } else {
+        vy = 0;
+        doStepFreeMode();
+    }
+
+}
+
+// funzione che disegna tutti i pezzi
+// (da invocarsi due volte: per la mesh, e per la sua ombra)
+// (se usecolor e' falso, NON sovrascrive il colore corrente
+//  e usa quello stabilito prima di chiamare la funzione)
+void Plane::RenderAllParts(bool usecolor) {
+    // disegna la carliga con una mesh
+    glPushMatrix();
+    if (!useEnvmap) {
+        if (usecolor)
+            glColor3f(1, 0, 0); // colore rosso, da usare con Lighting
+    } else {
+        if (usecolor)
+            SetupEnvmapTexture();
+    }
+    glScalef(1.5, 1.5, 1.5);
+    lowPolyPlane.RenderNxV(); // rendering delle mesh carlinga usando normali per vertice
+    if (usecolor)
+        glEnable(GL_LIGHTING);
+
+    glPopMatrix();
+}
+
+
+// Funzione che prepara tutto per usare un env map
+void Plane::SetupEnvmapTexture() {
+    // facciamo binding con la texture 1
+    glBindTexture(GL_TEXTURE_2D, envMapTexture.getTextureID());
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_GEN_S); // abilito la generazione automatica delle coord texture S e T
+    glEnable(GL_TEXTURE_GEN_T);
+    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP); // Env map
+    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+    glColor3f(1, 1, 1); // metto il colore neutro (viene moltiplicato col colore texture, componente per componente)
+    glDisable(GL_LIGHTING); // disabilito il lighting OpenGL standard (lo faccio con la texture)
+}
+
+void Plane::calcTurningAnimation() {
+    // Piccola rotazione per quando si va a destra o sinistra
+    animationStep(goLeft, goRight, turning_rotation_Z, turn_speed_Z, max_turn_Z);
+
+    // Rotazione per quando si va sopra o sotto (o avanti e dietro)
+    if (cameraType == PLAY_MODE) animationStep(goForward, goBack, turning_rotation_X, turn_speed_X, max_turn_X);
+    else animationStep(goBack, goForward, turning_rotation_X, turn_speed_X, max_turn_X);
+}
+
+void Plane::animationStep(bool move1, bool move2, float &turning, float speed, float max){
+    if (move1 || move2) {
+        if (move1) {
+            turning += speed;
+        }
+        if (move2) {
+            turning -= speed;
+        }
+    } else {
+        if (turning < -0.1f) {
+            turning += 0.3f;
+        } else if (turning > 0.1f) {
+            turning -= 0.3f;
+        } else turning = 0;
+    }
+    if (turning > max) turning = max;
+    else if (turning < -max) turning = -max;
+}
+
+void Plane::doStepFreeMode() {
     // computiamo l'evolversi della macchina
 
     float vxm, vym, vzm; // velocita' in spazio macchina
@@ -107,18 +170,14 @@ void Plane::DoStep() {
     vzm = +sinf * vx + cosf * vz;
 
     // gestione dello sterzo
-    if (goLeft){
-        sterzo+=velSterzo;
-    }
-    if (goRight){sterzo-=velSterzo;}
-    sterzo*=velRitornoSterzo; // ritorno a volante dritto
+    if (goLeft) sterzo += velSterzo;
+    if (goRight) sterzo -= velSterzo;
+    sterzo *= velRitornoSterzo; // ritorno a volante dritto
 
-    if (goForward)
-        vzm -= accMax; // accelerazione in avanti
-    if (goBack)
-        vzm += accMax; // accelerazione indietro
+    if (goForward) vzm -= accMax; // accelerazione in avanti
+    if (goBack) vzm += accMax;  // accelerazione indietro
 
-    // attirti (semplificando)
+    // attriti (semplificando)
     vxm *= attritoX;
     vym *= attritoY;
     vzm *= attritoZ;
@@ -138,29 +197,71 @@ void Plane::DoStep() {
     px += vx;
     py += vy;
     pz += vz;
+
 }
 
-// funzione che disegna tutti i pezzi della macchina
-// (carlinga, + 4 route)
-// (da invocarsi due volte: per la macchina, e per la sua ombra)
-// (se usecolor e' falso, NON sovrascrive il colore corrente
-//  e usa quello stabilito prima di chiamare la funzione)
-void Plane::RenderAllParts(bool usecolor) {
-    // disegna la carliga con una mesh
-    glPushMatrix();
-    // if (!useEnvmap)
-    // {
-    //     if (usecolor)
-    //         glColor3f(1, 0, 0); // colore rosso, da usare con Lighting
-    // }
-    // else
-    // {
-    //     if (usecolor)
-    //         SetupEnvmapTexture();
-    // }
-    lowPolyPlane.RenderNxV(); // rendering delle mesh carlinga usando normali per vertice
-    if (usecolor)
-        glEnable(GL_LIGHTING);
+extern int scrW, scrH;
 
-    glPopMatrix();
+void Plane::doStepPlayMode() {
+
+    float vxm = vx, vym = vy;
+
+    if (goLeft) vxm -= accMax;
+    if (goRight) vxm += accMax;
+
+    vxm *= 0.995;
+
+    if (goForward) vym += accMax;
+    if (goBack) vym -= accMax;
+
+    vym *= 0.995;
+
+    // rotazione mozzo ruote (a seconda della velocita' sulla z)
+
+    // ritorno a vel coord mondo
+    vx = vxm;
+    vy = vym;
+
+    // posizione = posizione + velocita * delta t (ma delta t e' costante)
+    px += vx;
+    py += vy;
+    pz += vz;
+
+
+    // CONTROLLO BORDI
+    double mv[16], p[16];
+    int vp[4];
+    double wx, wy, wz;
+    glGetDoublev(GL_MODELVIEW_MATRIX, mv);
+    glGetDoublev(GL_PROJECTION_MATRIX, p);
+    glGetIntegerv(GL_VIEWPORT, vp);
+    gluProject(px, py, pz, mv, p, vp, &wx, &wy, &wz); // mappa coordinate oggetto a coordinate finestra
+
+    if (wx > scrW + 100) { // 100 è l'offset per far muovere la navicella quasi del tutto fuori dallo schermo prima di
+        // tornare all'inizio
+        double ox, oy, oz;
+        gluUnProject(0, wy, wz, mv, p, vp, &ox, &oy, &oz);
+        px = static_cast<float>(ox);
+    }
+    else if (wx < -100) {
+        double ox, oy, oz;
+        gluUnProject(scrW, wy, wz, mv, p, vp, &ox, &oy, &oz);
+        px = static_cast<float>(ox);
+    }
+
+    if (wy > scrH + 100) { // 100 è l'offset per far muovere la navicella quasi del tutto fuori dallo schermo prima di
+        // tornare all'inizio
+        double ox, oy, oz;
+        gluUnProject(wx, 0, wz, mv, p, vp, &ox, &oy, &oz);
+        py = static_cast<float>(oy);
+    }
+    else if (wy < -50) {
+        double ox, oy, oz;
+        gluUnProject(wz, scrH, wz, mv, p, vp, &ox, &oy, &oz);
+        py = static_cast<float>(oy);
+    }
+
+
+
 }
+

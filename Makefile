@@ -4,8 +4,8 @@ CPP  = g++
 CC   = gcc
 BIN  = ProjGraf
 
-OBJ  = main.o plane.o controller.o mesh.o
-LINKOBJ  = main.o plane.o controller.o mesh.o
+OBJ  = main.o plane.o controller.o mesh.o terrain.o
+LINKOBJ  = main.o plane.o controller.o mesh.o terrain.o
 
 # Library linking
 OS := $(shell uname)
@@ -52,3 +52,6 @@ controller.o: controller.cpp
 
 mesh.o: mesh.cpp
 	$(CPP) -c $(FRMPATH) mesh.cpp -o mesh.o
+
+terrain.o: terrain.cpp
+	$(CPP) -c $(FRMPATH) terrain.cpp -o terrain.o

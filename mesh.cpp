@@ -2,8 +2,9 @@
 //
 // Implementazione dei metodi di Mesh
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <string>
+
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
@@ -106,22 +107,21 @@ void Mesh::RenderNxV()
         glColor3f(.5, .5, .5);
         RenderWire();
         glColor3f(1, 1, 1);
+    } else {
+        // mandiamo tutti i triangoli a schermo
+        glBegin(GL_TRIANGLES);
+        for (int i = 0; i < f.size(); i++) {
+            (f[i].v[0])->n.SendAsNormal(); // gouroud shading (o phong?)
+            (f[i].v[0])->p.SendAsVertex();
+
+            (f[i].v[1])->n.SendAsNormal();
+            (f[i].v[1])->p.SendAsVertex();
+
+            (f[i].v[2])->n.SendAsNormal();
+            (f[i].v[2])->p.SendAsVertex();
+        }
+        glEnd();
     }
-
-    // mandiamo tutti i triangoli a schermo
-    glBegin(GL_TRIANGLES);
-    for (int i = 0; i < f.size(); i++)
-    {
-        (f[i].v[0])->n.SendAsNormal(); // gouroud shading (o phong?)
-        (f[i].v[0])->p.SendAsVertex();
-
-        (f[i].v[1])->n.SendAsNormal();
-        (f[i].v[1])->p.SendAsVertex();
-
-        (f[i].v[2])->n.SendAsNormal();
-        (f[i].v[2])->p.SendAsVertex();
-    }
-    glEnd();
 }
 
 // trova l'AXIS ALIGNED BOUNDIG BOX

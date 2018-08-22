@@ -1,3 +1,6 @@
+#ifndef PROJGRAF_CONTROLLER_H
+#define PROJGRAF_CONTROLLER_H
+
 #include "plane.h"
 
 class Command
@@ -55,3 +58,5 @@ class Controller
 
     virtual ~Controller();
 };
+
+#endif //PROJGRAF_CONTROLLER_H

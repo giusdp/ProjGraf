@@ -1,3 +1,25 @@
+//
+// Created by giuseppe on 19/08/18.
+//
+
+#ifndef PROJGRAF_POINT3_H
+#define PROJGRAF_POINT3_H
+
+#include <SDL2/SDL.h>
+
+#ifdef __APPLE__
+#include <SDL2_image/SDL_image.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+
+#include <SDL2/SDL_image.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <utility>
+
+#endif
+
 #include <cmath>
 // classe Point3: un punto (o vettore) in 3 dimensioni
 // comprende le operazioni fra punti
@@ -74,6 +96,10 @@ public:
                 coord[0] * a.coord[1] - coord[1] * a.coord[0]};
     }
 
+    float dot(const Point3 &a) const {
+        return coord[0]*a.coord[0] + coord[1]*a.coord[1] + coord[2]*a.coord[2];
+    }
+
     // mandare il punto come vertice di OpenGl
     void SendAsVertex() const {
         glVertex3fv(coord);
@@ -92,3 +118,5 @@ typedef Point3 Vector3;
 inline void glTranslate(Point3 v) {
     glTranslatef(v.X(), v.Y(), v.Z());
 }
+
+#endif //PROJGRAF_POINT3_H

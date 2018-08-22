@@ -1,3 +1,6 @@
+#ifndef PROJGRAF_PLANE_H
+#define PROJGRAF_PLANE_H
+
 #include <SDL2/SDL.h>
 
 #ifdef __APPLE__
@@ -14,37 +17,47 @@
 #endif
 
 #include "mesh.h"
+#include "texture.h"
 
 class Plane {
 private:
     Mesh lowPolyPlane;
+    Texture envMapTexture;
 
     void RenderAllParts(bool usecolor);
+    void SetupEnvmapTexture();
+
+    void calcTurningAnimation();
+    void animationStep(bool move1, bool move2, float &turning, float speed, float max);
+
+    void doStepFreeMode();
+    void doStepPlayMode();
 
 public:
-    bool goForward, goBack, goLeft, goRight;
+    bool goForward = false, goBack= false, goLeft= false, goRight= false;
 
     // Metodi
     void Init();         // inizializza variabili
     void Render(); // disegna a schermo
     void DoStep();       // computa un passo del motore fisico
     explicit Plane(Mesh lowPolyPlane) : lowPolyPlane(std::move(lowPolyPlane)) {
-        goForward = false;
-        goBack = false;
-        goLeft = false;
-        goRight = false;
+        envMapTexture = Texture();
+        envMapTexture.loadTexture2D((char *) "Assets/envmap_flipped.jpg");
         Init();
     }  // costruttore
 
-    // STATO DELLA MACCHINA
+
     // (DoStep fa evolvere queste variabili nel tempo)
     float px{}, py{}, pz{}, facing{};     // posizione e orientamento
     float mozzoA{}, mozzoP{}, sterzo{}; // stato interno
     float vx{}, vy{}, vz{};             // velocita' attuale
 
-    // STATS DELLA MACCHINA
-    // (di solito rimangono costanti)
-    float velSterzo{}, velRitornoSterzo{}, accMax{}, attrito{},
-            raggioRuotaA{}, raggioRuotaP{}, grip{},
-            attritoX{}, attritoY{}, attritoZ{}; // attriti
+
+    float velSterzo{}, velRitornoSterzo{}, accMax{}, grip{};
+
+    float attritoX = 0.8, attritoY = 1.0, attritoZ = 0.991; // attriti
+
+
 };
+
+#endif //PROJGRAF_PLANE_H

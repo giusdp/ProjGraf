@@ -1,3 +1,6 @@
+#ifndef PROJGRAF_MESH_H
+#define PROJGRAF_MESH_H
+
 #include <vector>
 #include "point3.h"
 
@@ -8,7 +11,7 @@ class Vertex
   public:
     Point3 p; // posizione
 
-    // attributi per verice
+    // attributi per vertice
     Vector3 n; // normale (per vertice)
 };
 
@@ -60,6 +63,12 @@ class Mesh
         ComputeBoundingBox();
     }
 
+    Mesh (std::vector<Vertex> &vs, std::vector<Face> &fs ) : v(vs), f(fs) {
+        ComputeNormalsPerFace();
+        ComputeNormalsPerVertex();
+        ComputeBoundingBox();
+    }
+
     // metodi
     void RenderNxF();  // manda a schermo la mesh Normali x Faccia
     void RenderNxV();  // manda a schermo la mesh Normali x Vertice
@@ -77,3 +86,4 @@ class Mesh
 
     Point3 bbmin, bbmax; // bounding box
 };
+#endif //PROJGRAF_MESH_H
