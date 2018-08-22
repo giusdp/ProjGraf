@@ -4,10 +4,16 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/giuseppe/CLionProjects/ProjGraf/HUD.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/HUD.cpp.o"
   "/home/giuseppe/CLionProjects/ProjGraf/controller.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/controller.cpp.o"
   "/home/giuseppe/CLionProjects/ProjGraf/main.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/main.cpp.o"
   "/home/giuseppe/CLionProjects/ProjGraf/mesh.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/mesh.cpp.o"
+  "/home/giuseppe/CLionProjects/ProjGraf/meteorshower.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/meteorshower.cpp.o"
+  "/home/giuseppe/CLionProjects/ProjGraf/perlinnoise.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o"
   "/home/giuseppe/CLionProjects/ProjGraf/plane.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/plane.cpp.o"
+  "/home/giuseppe/CLionProjects/ProjGraf/skybox.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/skybox.cpp.o"
+  "/home/giuseppe/CLionProjects/ProjGraf/terrain.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/terrain.cpp.o"
+  "/home/giuseppe/CLionProjects/ProjGraf/texture.cpp" "/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles/ProjGraf.dir/texture.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

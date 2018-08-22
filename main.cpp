@@ -4,6 +4,7 @@
 #include "terrain.h"
 #include "texture.h"
 #include "skybox.h"
+#include "meteorshower.h"
 
 #define FREE_MODE 0
 #define PLAY_MODE 1
@@ -28,6 +29,7 @@ int cameraType = 1;
 Texture texturePlane;
 Terrain *terrain;
 SkyBox *sky;
+MeteorShower *meteorShower;
 
 // setto la posizione della camera
 void setCamera(Plane plane) {
@@ -117,6 +119,7 @@ void render(SDL_Window *win, Plane plane) {
 
     terrain->render(); // disegna il terreno
     plane.Render(); // disegna il giocatore
+    meteorShower->render();
 
     // attendiamo la fine della rasterizzazione di
     // tutte le primitive mandate
@@ -161,15 +164,12 @@ int main(int argc, char *argv[]) {
     glEnable(GL_POLYGON_OFFSET_FILL); // sposta frammenti generati dalla
     glPolygonOffset(1, 1);            // rasterizzazione poligoni indietro di 1
 
-    //if (!LoadTexture(1,(char *)"envmap_flipped.jpg")) return 0;
-    //if (!LoadTexture(2,(char *)"logo.jpg")) return -1;
-
-    //Plane *plane = new Plane(Mesh((char *) "Ferrari_chassis.obj"));// l'aereoplanino
+    // *** ALLOCAZIONE ENTITA ***
     Plane *plane = new Plane(Mesh((char *) "Assets/lowpolyplane.obj"));// l'aereoplanino
     terrain = new Terrain();
-    //sky = new SkyBox((char *)"Assets/sky_ok.jpg");
     sky = new SkyBox((char *) "Assets/hills_ft.tga");
-
+    meteorShower = new MeteorShower();
+    meteorShower->launchMeteor();
     //Creo il controller per gestire gli input con il Command Pattern
     Controller controller = Controller();
     bool done = false;
@@ -261,7 +261,8 @@ int main(int argc, char *argv[]) {
     }
     std::cout << "Uscito dal game loop." << std::endl;
 
-    delete plane, terrain, sky;
+    // *** CLEANING UP ****
+    delete plane, terrain, sky, meteorShower;
     SDL_GL_DeleteContext(mainContext);
     SDL_DestroyWindow(win);
     SDL_Quit();

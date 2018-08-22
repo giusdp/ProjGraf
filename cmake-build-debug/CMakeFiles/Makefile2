@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug
 CMakeFiles/ProjGraf.dir/all:
 	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/depend
 	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5 "Built target ProjGraf"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11 "Built target ProjGraf"
 .PHONY : CMakeFiles/ProjGraf.dir/all
 
 # Include target in all.
@@ -76,7 +76,7 @@ all: CMakeFiles/ProjGraf.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ProjGraf.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles 11
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ProjGraf.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/ProjGraf.dir/rule

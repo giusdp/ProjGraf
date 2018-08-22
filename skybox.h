@@ -7,6 +7,7 @@
 
 
 #include "texture.h"
+#include "utils.h"
 
 class SkyBox {
 

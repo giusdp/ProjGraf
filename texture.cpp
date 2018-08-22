@@ -2,8 +2,6 @@
 // Created by giuseppe on 21/08/18.
 //
 
-
-#include <GL/glu.h>
 #include "texture.h"
 
 bool Texture::loadTexture2D(char *filename) {

@@ -27,14 +27,11 @@ private:
 
     void vertexColor(float y);
 
-    Mesh *terrain;
 public:
 
     Terrain();
 
     void render();
-
-    virtual ~Terrain();
 
 };
 

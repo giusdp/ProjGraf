@@ -123,6 +123,33 @@ ProjGraf/fast:
 	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/build
 .PHONY : ProjGraf/fast
 
+HUD.o: HUD.cpp.o
+
+.PHONY : HUD.o
+
+# target to build an object file
+HUD.cpp.o:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/HUD.cpp.o
+.PHONY : HUD.cpp.o
+
+HUD.i: HUD.cpp.i
+
+.PHONY : HUD.i
+
+# target to preprocess a source file
+HUD.cpp.i:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/HUD.cpp.i
+.PHONY : HUD.cpp.i
+
+HUD.s: HUD.cpp.s
+
+.PHONY : HUD.s
+
+# target to generate assembly for a file
+HUD.cpp.s:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/HUD.cpp.s
+.PHONY : HUD.cpp.s
+
 controller.o: controller.cpp.o
 
 .PHONY : controller.o
@@ -204,6 +231,60 @@ mesh.cpp.s:
 	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/mesh.cpp.s
 .PHONY : mesh.cpp.s
 
+meteorshower.o: meteorshower.cpp.o
+
+.PHONY : meteorshower.o
+
+# target to build an object file
+meteorshower.cpp.o:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/meteorshower.cpp.o
+.PHONY : meteorshower.cpp.o
+
+meteorshower.i: meteorshower.cpp.i
+
+.PHONY : meteorshower.i
+
+# target to preprocess a source file
+meteorshower.cpp.i:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/meteorshower.cpp.i
+.PHONY : meteorshower.cpp.i
+
+meteorshower.s: meteorshower.cpp.s
+
+.PHONY : meteorshower.s
+
+# target to generate assembly for a file
+meteorshower.cpp.s:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/meteorshower.cpp.s
+.PHONY : meteorshower.cpp.s
+
+perlinnoise.o: perlinnoise.cpp.o
+
+.PHONY : perlinnoise.o
+
+# target to build an object file
+perlinnoise.cpp.o:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o
+.PHONY : perlinnoise.cpp.o
+
+perlinnoise.i: perlinnoise.cpp.i
+
+.PHONY : perlinnoise.i
+
+# target to preprocess a source file
+perlinnoise.cpp.i:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/perlinnoise.cpp.i
+.PHONY : perlinnoise.cpp.i
+
+perlinnoise.s: perlinnoise.cpp.s
+
+.PHONY : perlinnoise.s
+
+# target to generate assembly for a file
+perlinnoise.cpp.s:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/perlinnoise.cpp.s
+.PHONY : perlinnoise.cpp.s
+
 plane.o: plane.cpp.o
 
 .PHONY : plane.o
@@ -231,6 +312,87 @@ plane.cpp.s:
 	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/plane.cpp.s
 .PHONY : plane.cpp.s
 
+skybox.o: skybox.cpp.o
+
+.PHONY : skybox.o
+
+# target to build an object file
+skybox.cpp.o:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/skybox.cpp.o
+.PHONY : skybox.cpp.o
+
+skybox.i: skybox.cpp.i
+
+.PHONY : skybox.i
+
+# target to preprocess a source file
+skybox.cpp.i:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/skybox.cpp.i
+.PHONY : skybox.cpp.i
+
+skybox.s: skybox.cpp.s
+
+.PHONY : skybox.s
+
+# target to generate assembly for a file
+skybox.cpp.s:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/skybox.cpp.s
+.PHONY : skybox.cpp.s
+
+terrain.o: terrain.cpp.o
+
+.PHONY : terrain.o
+
+# target to build an object file
+terrain.cpp.o:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/terrain.cpp.o
+.PHONY : terrain.cpp.o
+
+terrain.i: terrain.cpp.i
+
+.PHONY : terrain.i
+
+# target to preprocess a source file
+terrain.cpp.i:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/terrain.cpp.i
+.PHONY : terrain.cpp.i
+
+terrain.s: terrain.cpp.s
+
+.PHONY : terrain.s
+
+# target to generate assembly for a file
+terrain.cpp.s:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/terrain.cpp.s
+.PHONY : terrain.cpp.s
+
+texture.o: texture.cpp.o
+
+.PHONY : texture.o
+
+# target to build an object file
+texture.cpp.o:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/texture.cpp.o
+.PHONY : texture.cpp.o
+
+texture.i: texture.cpp.i
+
+.PHONY : texture.i
+
+# target to preprocess a source file
+texture.cpp.i:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/texture.cpp.i
+.PHONY : texture.cpp.i
+
+texture.s: texture.cpp.s
+
+.PHONY : texture.s
+
+# target to generate assembly for a file
+texture.cpp.s:
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/texture.cpp.s
+.PHONY : texture.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -240,6 +402,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... ProjGraf"
+	@echo "... HUD.o"
+	@echo "... HUD.i"
+	@echo "... HUD.s"
 	@echo "... controller.o"
 	@echo "... controller.i"
 	@echo "... controller.s"
@@ -249,9 +414,24 @@ help:
 	@echo "... mesh.o"
 	@echo "... mesh.i"
 	@echo "... mesh.s"
+	@echo "... meteorshower.o"
+	@echo "... meteorshower.i"
+	@echo "... meteorshower.s"
+	@echo "... perlinnoise.o"
+	@echo "... perlinnoise.i"
+	@echo "... perlinnoise.s"
 	@echo "... plane.o"
 	@echo "... plane.i"
 	@echo "... plane.s"
+	@echo "... skybox.o"
+	@echo "... skybox.i"
+	@echo "... skybox.s"
+	@echo "... terrain.o"
+	@echo "... terrain.i"
+	@echo "... terrain.s"
+	@echo "... texture.o"
+	@echo "... texture.i"
+	@echo "... texture.s"
 .PHONY : help
 
 

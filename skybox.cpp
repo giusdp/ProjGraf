@@ -3,8 +3,7 @@
 //
 
 #include "skybox.h"
-#include "point3.h"
-#include "utils.h"
+
 extern bool useWireframe;
 
 SkyBox::SkyBox(char *sky_file_image) {

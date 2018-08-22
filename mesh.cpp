@@ -129,17 +129,16 @@ void Mesh::ComputeBoundingBox()
 {
     // basta trovare la min x, y, e z, e la max x, y, e z di tutti i vertici
     // (nota: non e' necessario usare le facce: perche?)
-    if (!v.size())
+    if (v.empty())
         return;
     bbmin = bbmax = v[0].p;
-    for (int i = 0; i < v.size(); i++)
-    {
+    for (auto &i : v) {
         for (int k = 0; k < 3; k++)
         {
-            if (bbmin.coord[k] > v[i].p.coord[k])
-                bbmin.coord[k] = v[i].p.coord[k];
-            if (bbmax.coord[k] < v[i].p.coord[k])
-                bbmax.coord[k] = v[i].p.coord[k];
+            if (bbmin.coord[k] > i.p.coord[k])
+                bbmin.coord[k] = i.p.coord[k];
+            if (bbmax.coord[k] < i.p.coord[k])
+                bbmax.coord[k] = i.p.coord[k];
         }
     }
 }
@@ -153,7 +152,7 @@ bool Mesh::LoadFromObj(char *filename)
 
     FILE *file = fopen(filename, "rt"); // apriamo il file in lettura
     if (!file) {
-        std::cout << "Errore apertura file " << filename << std::endl;
+        std::fprintf(stderr, "Errore apertura file %s.\n", filename);
         return false;
     }
     //make a first pass through the file to get a count of the number

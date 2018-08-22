@@ -153,12 +153,162 @@ CMakeFiles/ProjGraf.dir/plane.cpp.o.provides: CMakeFiles/ProjGraf.dir/plane.cpp.
 CMakeFiles/ProjGraf.dir/plane.cpp.o.provides.build: CMakeFiles/ProjGraf.dir/plane.cpp.o
 
 
+CMakeFiles/ProjGraf.dir/terrain.cpp.o: CMakeFiles/ProjGraf.dir/flags.make
+CMakeFiles/ProjGraf.dir/terrain.cpp.o: ../terrain.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ProjGraf.dir/terrain.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProjGraf.dir/terrain.cpp.o -c /home/giuseppe/CLionProjects/ProjGraf/terrain.cpp
+
+CMakeFiles/ProjGraf.dir/terrain.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ProjGraf.dir/terrain.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/giuseppe/CLionProjects/ProjGraf/terrain.cpp > CMakeFiles/ProjGraf.dir/terrain.cpp.i
+
+CMakeFiles/ProjGraf.dir/terrain.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ProjGraf.dir/terrain.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/giuseppe/CLionProjects/ProjGraf/terrain.cpp -o CMakeFiles/ProjGraf.dir/terrain.cpp.s
+
+CMakeFiles/ProjGraf.dir/terrain.cpp.o.requires:
+
+.PHONY : CMakeFiles/ProjGraf.dir/terrain.cpp.o.requires
+
+CMakeFiles/ProjGraf.dir/terrain.cpp.o.provides: CMakeFiles/ProjGraf.dir/terrain.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/terrain.cpp.o.provides.build
+.PHONY : CMakeFiles/ProjGraf.dir/terrain.cpp.o.provides
+
+CMakeFiles/ProjGraf.dir/terrain.cpp.o.provides.build: CMakeFiles/ProjGraf.dir/terrain.cpp.o
+
+
+CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o: CMakeFiles/ProjGraf.dir/flags.make
+CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o: ../perlinnoise.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o -c /home/giuseppe/CLionProjects/ProjGraf/perlinnoise.cpp
+
+CMakeFiles/ProjGraf.dir/perlinnoise.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ProjGraf.dir/perlinnoise.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/giuseppe/CLionProjects/ProjGraf/perlinnoise.cpp > CMakeFiles/ProjGraf.dir/perlinnoise.cpp.i
+
+CMakeFiles/ProjGraf.dir/perlinnoise.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ProjGraf.dir/perlinnoise.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/giuseppe/CLionProjects/ProjGraf/perlinnoise.cpp -o CMakeFiles/ProjGraf.dir/perlinnoise.cpp.s
+
+CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o.requires:
+
+.PHONY : CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o.requires
+
+CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o.provides: CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o.provides.build
+.PHONY : CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o.provides
+
+CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o.provides.build: CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o
+
+
+CMakeFiles/ProjGraf.dir/HUD.cpp.o: CMakeFiles/ProjGraf.dir/flags.make
+CMakeFiles/ProjGraf.dir/HUD.cpp.o: ../HUD.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ProjGraf.dir/HUD.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProjGraf.dir/HUD.cpp.o -c /home/giuseppe/CLionProjects/ProjGraf/HUD.cpp
+
+CMakeFiles/ProjGraf.dir/HUD.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ProjGraf.dir/HUD.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/giuseppe/CLionProjects/ProjGraf/HUD.cpp > CMakeFiles/ProjGraf.dir/HUD.cpp.i
+
+CMakeFiles/ProjGraf.dir/HUD.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ProjGraf.dir/HUD.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/giuseppe/CLionProjects/ProjGraf/HUD.cpp -o CMakeFiles/ProjGraf.dir/HUD.cpp.s
+
+CMakeFiles/ProjGraf.dir/HUD.cpp.o.requires:
+
+.PHONY : CMakeFiles/ProjGraf.dir/HUD.cpp.o.requires
+
+CMakeFiles/ProjGraf.dir/HUD.cpp.o.provides: CMakeFiles/ProjGraf.dir/HUD.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/HUD.cpp.o.provides.build
+.PHONY : CMakeFiles/ProjGraf.dir/HUD.cpp.o.provides
+
+CMakeFiles/ProjGraf.dir/HUD.cpp.o.provides.build: CMakeFiles/ProjGraf.dir/HUD.cpp.o
+
+
+CMakeFiles/ProjGraf.dir/texture.cpp.o: CMakeFiles/ProjGraf.dir/flags.make
+CMakeFiles/ProjGraf.dir/texture.cpp.o: ../texture.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ProjGraf.dir/texture.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProjGraf.dir/texture.cpp.o -c /home/giuseppe/CLionProjects/ProjGraf/texture.cpp
+
+CMakeFiles/ProjGraf.dir/texture.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ProjGraf.dir/texture.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/giuseppe/CLionProjects/ProjGraf/texture.cpp > CMakeFiles/ProjGraf.dir/texture.cpp.i
+
+CMakeFiles/ProjGraf.dir/texture.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ProjGraf.dir/texture.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/giuseppe/CLionProjects/ProjGraf/texture.cpp -o CMakeFiles/ProjGraf.dir/texture.cpp.s
+
+CMakeFiles/ProjGraf.dir/texture.cpp.o.requires:
+
+.PHONY : CMakeFiles/ProjGraf.dir/texture.cpp.o.requires
+
+CMakeFiles/ProjGraf.dir/texture.cpp.o.provides: CMakeFiles/ProjGraf.dir/texture.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/texture.cpp.o.provides.build
+.PHONY : CMakeFiles/ProjGraf.dir/texture.cpp.o.provides
+
+CMakeFiles/ProjGraf.dir/texture.cpp.o.provides.build: CMakeFiles/ProjGraf.dir/texture.cpp.o
+
+
+CMakeFiles/ProjGraf.dir/skybox.cpp.o: CMakeFiles/ProjGraf.dir/flags.make
+CMakeFiles/ProjGraf.dir/skybox.cpp.o: ../skybox.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/ProjGraf.dir/skybox.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProjGraf.dir/skybox.cpp.o -c /home/giuseppe/CLionProjects/ProjGraf/skybox.cpp
+
+CMakeFiles/ProjGraf.dir/skybox.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ProjGraf.dir/skybox.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/giuseppe/CLionProjects/ProjGraf/skybox.cpp > CMakeFiles/ProjGraf.dir/skybox.cpp.i
+
+CMakeFiles/ProjGraf.dir/skybox.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ProjGraf.dir/skybox.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/giuseppe/CLionProjects/ProjGraf/skybox.cpp -o CMakeFiles/ProjGraf.dir/skybox.cpp.s
+
+CMakeFiles/ProjGraf.dir/skybox.cpp.o.requires:
+
+.PHONY : CMakeFiles/ProjGraf.dir/skybox.cpp.o.requires
+
+CMakeFiles/ProjGraf.dir/skybox.cpp.o.provides: CMakeFiles/ProjGraf.dir/skybox.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/skybox.cpp.o.provides.build
+.PHONY : CMakeFiles/ProjGraf.dir/skybox.cpp.o.provides
+
+CMakeFiles/ProjGraf.dir/skybox.cpp.o.provides.build: CMakeFiles/ProjGraf.dir/skybox.cpp.o
+
+
+CMakeFiles/ProjGraf.dir/meteorshower.cpp.o: CMakeFiles/ProjGraf.dir/flags.make
+CMakeFiles/ProjGraf.dir/meteorshower.cpp.o: ../meteorshower.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/ProjGraf.dir/meteorshower.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ProjGraf.dir/meteorshower.cpp.o -c /home/giuseppe/CLionProjects/ProjGraf/meteorshower.cpp
+
+CMakeFiles/ProjGraf.dir/meteorshower.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ProjGraf.dir/meteorshower.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/giuseppe/CLionProjects/ProjGraf/meteorshower.cpp > CMakeFiles/ProjGraf.dir/meteorshower.cpp.i
+
+CMakeFiles/ProjGraf.dir/meteorshower.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ProjGraf.dir/meteorshower.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/giuseppe/CLionProjects/ProjGraf/meteorshower.cpp -o CMakeFiles/ProjGraf.dir/meteorshower.cpp.s
+
+CMakeFiles/ProjGraf.dir/meteorshower.cpp.o.requires:
+
+.PHONY : CMakeFiles/ProjGraf.dir/meteorshower.cpp.o.requires
+
+CMakeFiles/ProjGraf.dir/meteorshower.cpp.o.provides: CMakeFiles/ProjGraf.dir/meteorshower.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ProjGraf.dir/build.make CMakeFiles/ProjGraf.dir/meteorshower.cpp.o.provides.build
+.PHONY : CMakeFiles/ProjGraf.dir/meteorshower.cpp.o.provides
+
+CMakeFiles/ProjGraf.dir/meteorshower.cpp.o.provides.build: CMakeFiles/ProjGraf.dir/meteorshower.cpp.o
+
+
 # Object files for target ProjGraf
 ProjGraf_OBJECTS = \
 "CMakeFiles/ProjGraf.dir/main.cpp.o" \
 "CMakeFiles/ProjGraf.dir/controller.cpp.o" \
 "CMakeFiles/ProjGraf.dir/mesh.cpp.o" \
-"CMakeFiles/ProjGraf.dir/plane.cpp.o"
+"CMakeFiles/ProjGraf.dir/plane.cpp.o" \
+"CMakeFiles/ProjGraf.dir/terrain.cpp.o" \
+"CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o" \
+"CMakeFiles/ProjGraf.dir/HUD.cpp.o" \
+"CMakeFiles/ProjGraf.dir/texture.cpp.o" \
+"CMakeFiles/ProjGraf.dir/skybox.cpp.o" \
+"CMakeFiles/ProjGraf.dir/meteorshower.cpp.o"
 
 # External object files for target ProjGraf
 ProjGraf_EXTERNAL_OBJECTS =
@@ -167,6 +317,12 @@ ProjGraf: CMakeFiles/ProjGraf.dir/main.cpp.o
 ProjGraf: CMakeFiles/ProjGraf.dir/controller.cpp.o
 ProjGraf: CMakeFiles/ProjGraf.dir/mesh.cpp.o
 ProjGraf: CMakeFiles/ProjGraf.dir/plane.cpp.o
+ProjGraf: CMakeFiles/ProjGraf.dir/terrain.cpp.o
+ProjGraf: CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o
+ProjGraf: CMakeFiles/ProjGraf.dir/HUD.cpp.o
+ProjGraf: CMakeFiles/ProjGraf.dir/texture.cpp.o
+ProjGraf: CMakeFiles/ProjGraf.dir/skybox.cpp.o
+ProjGraf: CMakeFiles/ProjGraf.dir/meteorshower.cpp.o
 ProjGraf: CMakeFiles/ProjGraf.dir/build.make
 ProjGraf: /usr/lib/x86_64-linux-gnu/libGLEW.so
 ProjGraf: /usr/lib/x86_64-linux-gnu/libGLEW.so
@@ -176,7 +332,7 @@ ProjGraf: /usr/lib/x86_64-linux-gnu/libGLEW.so
 ProjGraf: /usr/lib/x86_64-linux-gnu/libGL.so
 ProjGraf: /usr/lib/x86_64-linux-gnu/libGLU.so
 ProjGraf: CMakeFiles/ProjGraf.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable ProjGraf"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/giuseppe/CLionProjects/ProjGraf/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable ProjGraf"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ProjGraf.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -188,6 +344,12 @@ CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/main.cpp.o.requires
 CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/controller.cpp.o.requires
 CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/mesh.cpp.o.requires
 CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/plane.cpp.o.requires
+CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/terrain.cpp.o.requires
+CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/perlinnoise.cpp.o.requires
+CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/HUD.cpp.o.requires
+CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/texture.cpp.o.requires
+CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/skybox.cpp.o.requires
+CMakeFiles/ProjGraf.dir/requires: CMakeFiles/ProjGraf.dir/meteorshower.cpp.o.requires
 
 .PHONY : CMakeFiles/ProjGraf.dir/requires
 

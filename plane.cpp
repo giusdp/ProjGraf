@@ -1,4 +1,3 @@
-#include <iostream>
 #include "plane.h"
 
 #define FREE_MODE 0

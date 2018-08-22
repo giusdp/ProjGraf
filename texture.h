@@ -9,6 +9,8 @@
 #include <SDL_surface.h>
 #include <SDL_image.h>
 #include <cstdio>
+#include <GL/glu.h>
+
 
 class Texture {
 

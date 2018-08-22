@@ -8,8 +8,6 @@ extern bool useWireframe;
 
 Terrain::Terrain() {
     generateTerrain();
-
-    terrain = new Mesh(grid, faces);
 }
 
 void Terrain::generateTerrain() {
@@ -127,7 +125,7 @@ float Terrain::mapRange(float x, float a, float b, float c, float d) {
 }
 
 void Terrain::vertexColor(float y) {
-    float green, red, blue;
+    float red = 1, green = 1, blue = 1;
     if (y >= 0 && y <= maxHeight) {
 // interpolate between (1.0f, 0.0f, 0.0f) and (0.0f, 1.0f, 0.0f)
         green = y / maxHeight;
@@ -144,8 +142,5 @@ void Terrain::vertexColor(float y) {
     glColor3f(red, green, blue);
 }
 
-Terrain::~Terrain() {
-    delete terrain;
-}
 
 

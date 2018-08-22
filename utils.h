@@ -7,6 +7,7 @@
 
 #include <GL/gl.h>
 #include <cmath>
+#include "point3.h"
 
 static void drawSphere(float r, float lats, float longs) {
 
@@ -41,7 +42,7 @@ static void drawSphere(float r, float lats, float longs) {
 }
 
 
-void drawQuad() {
+/*void drawQuad() {
     glPushMatrix();
 
     glTranslatef(0,0,-64);
@@ -66,6 +67,6 @@ void drawQuad() {
 
     glPopMatrix();
 
-}
+}*/
 
 #endif //PROJGRAF_UTILS_H
