@@ -248,7 +248,7 @@ bool Mesh::LoadFromObj(char *filename)
         }
     }
 
-    std::printf("dopo FirstPass nv=%d nf=%d nt=%d\n",nv,nf,nt);
+    //std::printf("dopo FirstPass nv=%d nf=%d nt=%d\n",nv,nf,nt);
 
     // allochiamo spazio per nv vertici
     v.resize(nv);
@@ -379,7 +379,7 @@ bool Mesh::LoadFromObj(char *filename)
         }
     }
 
-    std::printf("dopo SecondPass nv=%d nt=%d\n",nv,nt);
+    //std::printf("dopo SecondPass nv=%d nt=%d\n",nv,nt);
 
     fclose(file);
     return true;

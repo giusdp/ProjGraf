@@ -4,7 +4,8 @@
 #include "terrain.h"
 #include "texture.h"
 #include "skybox.h"
-#include "meteorshower.h"
+#include "meteorspawner.h"
+#include "HUD.h"
 
 #define FREE_MODE 0
 #define PLAY_MODE 1
@@ -29,10 +30,12 @@ int cameraType = 1;
 Texture texturePlane;
 Terrain *terrain;
 SkyBox *sky;
-MeteorShower *meteorShower;
+MeteorSpawner *meteorShower;
+HUD *hud;
 
 // setto la posizione della camera
-void setCamera(Plane plane) {
+void setCamera(Plane plane)
+{
 
     double px = plane.px;
     double py = plane.py;
@@ -44,35 +47,36 @@ void setCamera(Plane plane) {
     double camd, camh, ex, ey, ez, cx, cy, cz;
     double cosff, sinff;
 
-
-    float viewAlpha = 20, viewBeta = 40; // angoli che definiscono la vista
-    float eyeDist = 10.0; // distanza dell'occhio dall'origine
+    float viewAlpha = 20, viewBeta = 2; // angoli che definiscono la vista
+    float eyeDist = 10.0;                // distanza dell'occhio dall'origine
 
     // controllo la posizione della camera a seconda dell'opzione selezionata
-    switch (cameraType) {
-        case FREE_MODE:
-            camd = 10;
-            camh = 5;
-            ex = px + camd * sinf;
-            ey = py + camh;
-            ez = pz + camd * cosf;
-            cx = px - camd * sinf;
-            cy = py + camh;
-            cz = pz - camd * cosf;
-            gluLookAt(ex, ey, ez, cx, cy, cz, 0.0, 1.0, 0.0);
-            break;
-        case PLAY_MODE:
-            glTranslatef(0, -7, -eyeDist);
-            // glRotatef(viewBeta,  1,0,0);
-            //glRotatef(viewAlpha, 0,1,0);
-            break;
-        default:
-            break;
+    switch (cameraType)
+    {
+    case FREE_MODE:
+        camd = 10;
+        camh = 5;
+        ex = px + camd * sinf;
+        ey = py + camh;
+        ez = pz + camd * cosf;
+        cx = px - camd * sinf;
+        cy = py + camh;
+        cz = pz - camd * cosf;
+        gluLookAt(ex, ey, ez, cx, cy, cz, 0.0, 1.0, 0.0);
+        break;
+    case PLAY_MODE:
+        glTranslatef(0, -7, -eyeDist);
+        glRotatef(viewBeta,  1,0,0);
+        //glRotatef(viewAlpha, 0,1,0);
+        break;
+    default:
+        break;
     }
 }
 
 /* Esegue il Rendering della scena */
-void render(SDL_Window *win, Plane plane) {
+void render(SDL_Window *win, Plane plane)
+{
 
     // un nuovo frame
     fpsNow++;
@@ -86,7 +90,7 @@ void render(SDL_Window *win, Plane plane) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(70,                   //fovy,
-                   ((float) scrW) / scrH, //aspect Y/X,
+                   ((float)scrW) / scrH, //aspect Y/X,
                    0.2,                  //distanza del NEAR CLIPPING PLANE in coordinate vista
                    1000                  //distanza del FAR CLIPPING PLANE in coordinate vista
     );
@@ -111,15 +115,11 @@ void render(SDL_Window *win, Plane plane) {
 
     glEnable(GL_LIGHTING);
 
-    // settiamo matrice di modellazione
     sky->render(); // disegna il cielo come sfondo
-
-    // TODO drawFloor(); // disegna il suolo
-    // TODO drawPista(); // disegna la pista
-
     terrain->render(); // disegna il terreno
-    plane.Render(); // disegna il giocatore
-    meteorShower->render();
+    plane.Render();    // disegna il giocatore
+    meteorShower->render(); // disegna gli oggetti
+    hud->render();
 
     // attendiamo la fine della rasterizzazione di
     // tutte le primitive mandate
@@ -134,13 +134,18 @@ void render(SDL_Window *win, Plane plane) {
     SDL_GL_SwapWindow(win);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     SDL_Window *win;
     SDL_GLContext mainContext;
     Uint32 windowID;
 
     // inizializzazione di SDL
-    SDL_Init(SDL_INIT_VIDEO);
+    if (SDL_Init(SDL_INIT_VIDEO) > 0)
+    {
+        std::fprintf(stderr, "Errore inizializzazione sdl.\n");
+        return 1;
+    }
 
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -148,6 +153,13 @@ int main(int argc, char *argv[]) {
     // facciamo una finestra di scrW x scrH pixels
     win = SDL_CreateWindow("Progetto Grafica", 0, 0, scrW, scrH,
                            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+
+    if (win == nullptr)
+    {
+        std::fprintf(stderr, "Errore creazione window.\n");
+        SDL_Quit();
+        return 1;
+    }
 
     //Create our opengl context and attach it to our window
     mainContext = SDL_GL_CreateContext(win);
@@ -164,73 +176,107 @@ int main(int argc, char *argv[]) {
     glEnable(GL_POLYGON_OFFSET_FILL); // sposta frammenti generati dalla
     glPolygonOffset(1, 1);            // rasterizzazione poligoni indietro di 1
 
+    // INIT TESTO PER HUD
+    TTF_Init();
+    TTF_Font *font = TTF_OpenFont("Assets/virgo.ttf", 12);
+    if (font == nullptr)
+    {
+        std::fprintf(stderr, "Errore lettura font.\n");
+        SDL_GL_DeleteContext(mainContext);
+        SDL_DestroyWindow(win);
+        TTF_Quit();
+        SDL_Quit();
+        return 1;
+    }
+
     // *** ALLOCAZIONE ENTITA ***
-    Plane *plane = new Plane(Mesh((char *) "Assets/lowpolyplane.obj"));// l'aereoplanino
+    Plane *plane = new Plane(Mesh((char *)"Assets/lowpolyplane.obj")); // l'aereoplanino
     terrain = new Terrain();
-    sky = new SkyBox((char *) "Assets/hills_ft.tga");
-    meteorShower = new MeteorShower();
-    meteorShower->launchMeteor();
+    sky = new SkyBox((char *)"Assets/hills_ft.tga");
+    meteorShower = new MeteorSpawner();
     //Creo il controller per gestire gli input con il Command Pattern
     Controller controller = Controller();
+
+    hud = new HUD(scrW, scrH, font);
+
     bool done = false;
     SDL_EventState(SDL_MOUSEMOTION, SDL_DISABLE); // Per non floodare la coda
 
     std::cout << "Game loop avviato." << std::endl;
-    while (!done) {
+    while (!done)
+    {
         SDL_Event e;
         // guardo se c'e' un evento:
-        if (SDL_PollEvent(&e)) {
+        if (SDL_PollEvent(&e))
+        {
             // se si: processa evento
-            switch (e.type) {
-                case SDL_QUIT:
-                    std::cout << "QUIT Premuto" << std::endl;
+            switch (e.type)
+            {
+            case SDL_QUIT:
+                std::cout << "QUIT Premuto" << std::endl;
+                done = true;
+                break;
+            case SDL_KEYDOWN:
+                if (e.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    std::cout << "ESC premuto" << std::endl;
                     done = true;
-                    break;
-                case SDL_KEYDOWN:
-                    if (e.key.keysym.sym == SDLK_ESCAPE) {
-                        std::cout << "ESC premuto" << std::endl;
-                        done = true;
-                    } else if (e.key.keysym.sym == 'c') cameraType = !cameraType;
-                    else if (e.key.keysym.sym == 'v') useWireframe = !useWireframe;
-                    else if (e.key.keysym.sym == 'b') useEnvmap = !useEnvmap;
-                    else if (e.key.keysym.sym == 'n') useShadow = !useShadow;
-                    controller.handleInputs(plane, e, true);
-                    break;
-                case SDL_KEYUP:
-                    controller.handleInputs(plane, e, false);
-                    break;
+                }
+                else if (e.key.keysym.sym == 'c')
+                    cameraType = !cameraType;
+                else if (e.key.keysym.sym == 'v')
+                    useWireframe = !useWireframe;
+                else if (e.key.keysym.sym == 'b')
+                    useEnvmap = !useEnvmap;
+                else if (e.key.keysym.sym == 'n')
+                    useShadow = !useShadow;
+                controller.handleInputs(plane, e, true);
+                break;
+            case SDL_KEYUP:
+                controller.handleInputs(plane, e, false);
+                break;
 
-                case SDL_WINDOWEVENT:
-                    // dobbiamo ridisegnare la finestra
-                    if (e.window.event == SDL_WINDOWEVENT_EXPOSED) {
-                        render(win, *plane);
-                    } else {
-                        windowID = SDL_GetWindowID(win);
-                        if (e.window.windowID == windowID) {
-                            switch (e.window.event) {
-                                case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                                    scrW = e.window.data1;
-                                    scrH = e.window.data2;
-                                    glViewport(0, 0, scrW, scrH);
-                                    render(win, *plane);
-                                    break;
-                                }
-                                default:
-                                    break;
-                            }
+            case SDL_WINDOWEVENT:
+                // dobbiamo ridisegnare la finestra
+                if (e.window.event == SDL_WINDOWEVENT_EXPOSED)
+                {
+                    render(win, *plane);
+                }
+                else
+                {
+                    windowID = SDL_GetWindowID(win);
+                    if (e.window.windowID == windowID)
+                    {
+                        switch (e.window.event)
+                        {
+                        case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        {
+                            scrW = e.window.data1;
+                            scrH = e.window.data2;
+                            glViewport(0, 0, scrW, scrH);
+                            hud->resize(scrW, scrH);
+                            render(win, *plane);
+                            break;
+                        }
+                        default:
+                            break;
                         }
                     }
-                    break;
-                default:
-                    break;
+                }
+                break;
+            default:
+                break;
             }
-        } else {
+        }
+        else
+        {
             // nessun evento: siamo IDLE
 
             Uint32 timeNow = SDL_GetTicks(); // che ore sono?
 
-            if (timeLastInterval + fpsSampling < timeNow) {
-                fps = static_cast<float>(1000.0 * ((float) fpsNow) / (timeNow - timeLastInterval));
+            if (timeLastInterval + fpsSampling < timeNow)
+            {
+                fps = static_cast<float>(1000.0 * ((float)fpsNow) / (timeNow - timeLastInterval));
                 fpsNow = 0;
                 timeLastInterval = timeNow;
             }
@@ -240,12 +286,15 @@ int main(int argc, char *argv[]) {
 
             // finche' il tempo simulato e' rimasto indietro rispetto
             // al tempo reale...
-            while (nstep * PHYS_SAMPLING_STEP < timeNow) {
+            while (nstep * PHYS_SAMPLING_STEP < timeNow)
+            {
                 plane->DoStep();
+                hud->update();
                 nstep++;
                 doneSomething = true;
                 timeNow = SDL_GetTicks();
-                if (guardia++ > 1000) {
+                if (guardia++ > 1000)
+                {
                     done = true;
                     break;
                 } // siamo troppo lenti!
@@ -253,8 +302,9 @@ int main(int argc, char *argv[]) {
 
             if (doneSomething)
                 render(win, *plane);
-                //redraw();
-            else {
+            //redraw();
+            else
+            {
                 // tempo libero!!!
             }
         }
@@ -262,9 +312,11 @@ int main(int argc, char *argv[]) {
     std::cout << "Uscito dal game loop." << std::endl;
 
     // *** CLEANING UP ****
-    delete plane, terrain, sky, meteorShower;
+    delete plane, terrain, sky, meteorShower, hud;
+    TTF_CloseFont(font);  
     SDL_GL_DeleteContext(mainContext);
     SDL_DestroyWindow(win);
+    TTF_Quit();
     SDL_Quit();
     std::cout << "Memoria e processi puliti." << std::endl;
     return (0);

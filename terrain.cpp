@@ -3,7 +3,7 @@
 //
 
 #include "terrain.h"
-
+#include "utils.h"
 extern bool useWireframe;
 
 Terrain::Terrain() {
@@ -117,11 +117,6 @@ void Terrain::render() {
 
     glColor3f(1, 1, 1);
     glPopMatrix();
-}
-
-float Terrain::mapRange(float x, float a, float b, float c, float d) {
-    float y = (x - a) * ((d - c) / (b - a)) + c;
-    return y;
 }
 
 void Terrain::vertexColor(float y) {

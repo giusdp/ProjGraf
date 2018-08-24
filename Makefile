@@ -4,8 +4,8 @@ CPP  = g++
 CC   = gcc
 BIN  = ProjGraf
 
-OBJ  = main.o plane.o controller.o mesh.o terrain.o
-LINKOBJ  = main.o plane.o controller.o mesh.o terrain.o
+OBJ  = main.o plane.o controller.o mesh.o terrain.o HUD.o meteorspawner.o perlinnoise.o skybox.o texture.o
+LINKOBJ  = main.o plane.o controller.o mesh.o terrain.o HUD.o meteorspawner.o perlinnoise.o skybox.o texture.o
 
 # Library linking
 OS := $(shell uname)
@@ -13,20 +13,20 @@ ifeq ($(OS),Darwin)
 ## caso Mac OS
 $(info Mac OS detected)
 FRMPATH=-F /Library/Frameworks
-LIBS =  -framework OpenGL -framework SDL2 -framework SDL2_image -lm
+LIBS =  -framework OpenGL -framework SDL2 -framework SDL2_ttf -framework SDL2_image -lm
 $(info SDL2 libraries must be in: $(FRMPATH))
 else
 ifeq ($(OS),MINGW32_NT-6.1)
 ## caso Windows MinGW
 $(info Windows MinGW detected)
 FRMPATH = -IC:\MinGW\include
-LIBS = -LC:\MinGW\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lopengl32 -lglu32 -lm
+LIBS = -LC:\MinGW\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lopengl32 -lglu32 -lm
 else
 ##caso Linux
 $(info Linux detected)
 #framework presenti solo nel caso MAC OS
 FRMPATH =
-LIBS = -lGL -lGLU -lSDL2 -lSDL2_image -lm
+LIBS = -lGL -lGLU -lSDL2 -lSDL2_ttf -lSDL2_image -lm
 endif
 endif
 
@@ -55,3 +55,18 @@ mesh.o: mesh.cpp
 
 terrain.o: terrain.cpp
 	$(CPP) -c $(FRMPATH) terrain.cpp -o terrain.o
+
+HUD.o: HUD.cpp
+	$(CPP) -c $(FRMPATH) HUD.cpp -o HUD.o
+
+meteorspawner.o: meteorspawner.cpp
+	$(CPP) -c $(FRMPATH) meteorspawner.cpp -o meteorspawner.o
+
+perlinnoise.o: perlinnoise.cpp
+	$(CPP) -c $(FRMPATH) perlinnoise.cpp -o perlinnoise.o
+
+skybox.o: skybox.cpp
+	$(CPP) -c $(FRMPATH) skybox.cpp -o skybox.o
+
+texture.o: texture.cpp
+	$(CPP) -c $(FRMPATH) texture.cpp -o texture.o

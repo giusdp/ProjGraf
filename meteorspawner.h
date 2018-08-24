@@ -15,15 +15,18 @@ extern bool useWireframe;
 class Meteor {
 
 public:
-    float px = 0, py= 20, pz = 0;
+    float px = 0, py = 50, pz = -50;
 
     float gravity = 0.25f; // velocità di caduta
-    float vel_Z = 1; // velocità di avvicinamento alla camera.
+    float vel_Z = 0.55f; // velocità di avvicinamento alla camera.
 
     float r, lats, longs;
 
     void render(GLuint textureID) {
-        if (py < -50) py = 20;
+        if (py < -30) {
+            py = 50;
+            pz = -50;
+        }
         glPushMatrix();
         glTranslatef(px, py, pz);
 
@@ -57,25 +60,27 @@ public:
         glPopMatrix();
 
         py -= gravity;
+        pz += vel_Z;
     }
 
     Meteor(float r, float lats, float longs) : r(r), lats(lats), longs(longs) {}
 
 };
 
-class MeteorShower {
+class MeteorSpawner {
 
-    std::vector<Meteor*> meteors; // Per tenere traccia delle meteore spawnate
+    std::vector<Meteor *> meteors; // Per tenere traccia delle meteore spawnate
 
     Texture *meteorTexture;
 public:
-    MeteorShower();
+    MeteorSpawner();
 
 public:
-     void launchMeteor();
-     void render();
+    void addMeteor(float x);
 
-    virtual ~MeteorShower();
+    void render();
+
+    virtual ~MeteorSpawner();
 
 };
 

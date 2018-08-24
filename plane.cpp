@@ -228,35 +228,29 @@ void Plane::doStepPlayMode() {
 
 
     // CONTROLLO BORDI
-    double mv[16], p[16];
-    int vp[4];
-    double wx, wy, wz;
-    glGetDoublev(GL_MODELVIEW_MATRIX, mv);
-    glGetDoublev(GL_PROJECTION_MATRIX, p);
-    glGetIntegerv(GL_VIEWPORT, vp);
-    gluProject(px, py, pz, mv, p, vp, &wx, &wy, &wz); // mappa coordinate oggetto a coordinate finestra
-
+    double wx, wy,wz;
+    convertCoordsOBJtoWin(px, py, pz, &wx, &wy,&wz); // mappa coordinate oggetto a coordinate finestra
     if (wx > scrW + 100) { // 100 è l'offset per far muovere la navicella quasi del tutto fuori dallo schermo prima di
         // tornare all'inizio
         double ox, oy, oz;
-        gluUnProject(0, wy, wz, mv, p, vp, &ox, &oy, &oz);
+        convertCoordsWintoObj(0, wy, wz, &ox, &oy, &oz);
         px = static_cast<float>(ox);
     }
     else if (wx < -100) {
         double ox, oy, oz;
-        gluUnProject(scrW, wy, wz, mv, p, vp, &ox, &oy, &oz);
+        convertCoordsWintoObj(scrW, wy, wz, &ox, &oy, &oz);
         px = static_cast<float>(ox);
     }
 
     if (wy > scrH + 100) { // 100 è l'offset per far muovere la navicella quasi del tutto fuori dallo schermo prima di
         // tornare all'inizio
         double ox, oy, oz;
-        gluUnProject(wx, 0, wz, mv, p, vp, &ox, &oy, &oz);
+        convertCoordsWintoObj(wx, 0, wz, &ox, &oy, &oz);
         py = static_cast<float>(oy);
     }
     else if (wy < -50) {
         double ox, oy, oz;
-        gluUnProject(wz, scrH, wz, mv, p, vp, &ox, &oy, &oz);
+        convertCoordsWintoObj(wx, scrH, wz, &ox, &oy, &oz);
         py = static_cast<float>(oy);
     }
 

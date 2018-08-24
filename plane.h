@@ -10,6 +10,7 @@
 #else
 
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <utility>
@@ -18,7 +19,7 @@
 
 #include "mesh.h"
 #include "texture.h"
-
+#include "utils.h"
 class Plane {
 private:
     Mesh lowPolyPlane;

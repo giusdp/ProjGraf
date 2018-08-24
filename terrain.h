@@ -23,8 +23,6 @@ private:
 
     void generateTerrain();
 
-    float mapRange(float x, float a, float b, float c, float d);
-
     void vertexColor(float y);
 
 public:

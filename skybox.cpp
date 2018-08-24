@@ -2,6 +2,7 @@
 // Created by giuseppe on 21/08/18.
 //
 
+#include <cstdio>
 #include "skybox.h"
 
 extern bool useWireframe;
