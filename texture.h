@@ -27,6 +27,8 @@ class Texture
   private:
     GLuint textureID;
 
+    bool isReloading = false;
+
   public:
     bool loadTexture2D(char *filename);
     bool loadTexture2D(SDL_Surface *surface, bool isText);

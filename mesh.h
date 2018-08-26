@@ -3,7 +3,15 @@
 
 #include <vector>
 #include "point3.h"
-
+#include "texture.h"
+//classe UV:
+//i punti delle texture
+class UV
+{
+  public:
+    float u, v;
+    UV(float u, float v) : u(u), v(v) {}
+};
 // classe Vertex:
 // i vertici della mesh
 class Vertex
@@ -27,12 +35,23 @@ class Face
   public:
     Vertex *v[3]; // tre puntatori a Vertice (i tre vertici del triangolo)
 
+    UV *uv[3];
+
     // costruttore
     Face(Vertex *a, Vertex *b, Vertex *c)
     {
         v[0] = a;
         v[1] = b;
         v[2] = c;
+    }
+    Face(Vertex *a, Vertex *b, Vertex *c, UV *ta, UV *tb, UV *tc)
+    {
+        v[0] = a;
+        v[1] = b;
+        v[2] = c;
+        uv[0] = ta;
+        uv[1] = tb;
+        uv[2] = tc;
     }
 
     // attributi per faccia
@@ -53,6 +72,8 @@ class Mesh
     std::vector<Face> f;   // vettore di facce
     std::vector<Edge> e;   // vettore di edge (per ora, non usato)
 
+    std::vector<UV> textures; // vettore delle textures
+
   public:
     // costruttore con caricamento
     Mesh(char *filename)
@@ -63,7 +84,8 @@ class Mesh
         ComputeBoundingBox();
     }
 
-    Mesh (std::vector<Vertex> &vs, std::vector<Face> &fs ) : v(vs), f(fs) {
+    Mesh(std::vector<Vertex> &vs, std::vector<Face> &fs) : v(vs), f(fs)
+    {
         ComputeNormalsPerFace();
         ComputeNormalsPerVertex();
         ComputeBoundingBox();
@@ -74,7 +96,9 @@ class Mesh
     void RenderNxV();  // manda a schermo la mesh Normali x Vertice
     void RenderWire(); // manda a schermo la mesh in wireframe
 
-    bool LoadFromObj(char *filename); //  carica la mesh da un file OFF
+    void RenderNxVxT(Texture texture); // come RenderNxV ma con una texture
+
+    bool LoadFromObj(char *filename); //  carica la mesh da un file OBJ
 
     void ComputeNormalsPerFace();
     void ComputeNormalsPerVertex();

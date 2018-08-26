@@ -27,6 +27,49 @@ void Mesh::ComputeNormalsPerFace()
     }
 }
 
+void Mesh::RenderNxVxT(Texture texture) // come RenderNxV ma con una texture
+{
+    if (useWireframe)
+    {
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(.5, .5, .5);
+        RenderWire();
+        glColor3f(1, 1, 1);
+    }
+    else
+    {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
+        glDisable(GL_TEXTURE_GEN_S);
+        glDisable(GL_TEXTURE_GEN_T);
+        glBegin(GL_TRIANGLES);
+        glColor3f(0.2, 0.2, 0.2);
+        for (UV uv : textures){
+            glTexCoord2f(uv.u, uv.v);
+        }
+
+
+        for (int i = 0; i < f.size(); i++)
+        {
+            glTexCoord2f(f[i].uv[0]->u, f[i].uv[0]->v);
+            (f[i].v[0])->n.SendAsNormal(); // gouroud shading (o phong?)
+            (f[i].v[0])->p.SendAsVertex();
+
+            glTexCoord2f(f[i].uv[1]->u, f[i].uv[1]->v);
+            (f[i].v[1])->n.SendAsNormal();
+            (f[i].v[1])->p.SendAsVertex();
+
+            glTexCoord2f(f[i].uv[2]->u, f[i].uv[2]->v);
+            (f[i].v[2])->n.SendAsNormal();
+            (f[i].v[2])->p.SendAsVertex();
+        }
+        glEnd();
+
+        glDisable(GL_TEXTURE_GEN_S);
+        glDisable(GL_TEXTURE_GEN_T);
+        glDisable(GL_TEXTURE_2D);
+    }
+}
 // Computo normali per vertice
 // (come media rinormalizzata delle normali delle facce adjacenti)
 void Mesh::ComputeNormalsPerVertex()
@@ -107,10 +150,13 @@ void Mesh::RenderNxV()
         glColor3f(.5, .5, .5);
         RenderWire();
         glColor3f(1, 1, 1);
-    } else {
+    }
+    else
+    {
         // mandiamo tutti i triangoli a schermo
         glBegin(GL_TRIANGLES);
-        for (int i = 0; i < f.size(); i++) {
+        for (int i = 0; i < f.size(); i++)
+        {
             (f[i].v[0])->n.SendAsNormal(); // gouroud shading (o phong?)
             (f[i].v[0])->p.SendAsVertex();
 
@@ -132,7 +178,8 @@ void Mesh::ComputeBoundingBox()
     if (v.empty())
         return;
     bbmin = bbmax = v[0].p;
-    for (auto &i : v) {
+    for (auto &i : v)
+    {
         for (int k = 0; k < 3; k++)
         {
             if (bbmin.coord[k] > i.p.coord[k])
@@ -149,9 +196,11 @@ void Mesh::ComputeBoundingBox()
 //
 bool Mesh::LoadFromObj(char *filename)
 {
+    std::vector<UV *> t;
 
     FILE *file = fopen(filename, "rt"); // apriamo il file in lettura
-    if (!file) {
+    if (!file)
+    {
         std::fprintf(stderr, "Errore apertura file %s.\n", filename);
         return false;
     }
@@ -160,6 +209,7 @@ bool Mesh::LoadFromObj(char *filename)
     char buf[128];
     int nv, nf, nt;
     float x, y, z;
+    float u_textcoord, v_textcoord;
     int va, vb, vc, vd;
     int na, nb, nc, nd;
     int ta, tb, tc, td;
@@ -182,6 +232,11 @@ bool Mesh::LoadFromObj(char *filename)
                 // eat up rest of line
                 fgets(buf, sizeof(buf), file);
                 nv++;
+                break;
+            case 't': // vt
+                // eat up rest of line
+                fgets(buf, sizeof(buf), file);
+                nt++;
                 break;
             default:
                 break;
@@ -209,11 +264,6 @@ bool Mesh::LoadFromObj(char *filename)
                 fscanf(file, "%d/%d/%d", &vb, &tb, &nb);
                 fscanf(file, "%d/%d/%d", &vc, &tc, &nc);
                 nf++;
-                nt++;
-                while (fscanf(file, "%d/%d/%d", &vd, &td, &nd) > 0)
-                {
-                    nt++;
-                }
             }
             else if (sscanf(buf, "%d/%d", &va, &ta) == 2)
             {
@@ -248,7 +298,7 @@ bool Mesh::LoadFromObj(char *filename)
         }
     }
 
-    //std::printf("dopo FirstPass nv=%d nf=%d nt=%d\n",nv,nf,nt);
+    //std::printf("dopo FirstPass nv=%d nf=%d nt=%d %s\n", nv, nf, nt, filename);
 
     // allochiamo spazio per nv vertici
     v.resize(nv);
@@ -277,6 +327,11 @@ bool Mesh::LoadFromObj(char *filename)
                 v[nv].p = Point3(x, y, z);
                 nv++;
                 break;
+            case 't': /* texcoords */
+                fscanf(file, "%f %f", &u_textcoord, &v_textcoord);
+                t.push_back(new UV(u_textcoord, v_textcoord));
+                nt++;
+                break;
             default:
                 break;
             }
@@ -295,14 +350,12 @@ bool Mesh::LoadFromObj(char *filename)
                 vc--;
                 Face newface(&(v[va]), &(v[vc]), &(v[vb])); // invoco il costruttore di faccia
                 f.push_back(newface);                       // inserico la nuova faccia in coda al vettore facce
-                nt++;
                 vb = vc;
                 while (fscanf(file, "%d//%d", &vc, &nc) > 0)
                 {
                     vc--;
                     Face newface(&(v[va]), &(v[vc]), &(v[vb])); // invoco il costruttore di faccia
                     f.push_back(newface);                       // inserico la nuova faccia in coda al vettore facce
-                    nt++;
                     vb = vc;
                 }
             }
@@ -314,17 +367,27 @@ bool Mesh::LoadFromObj(char *filename)
                 va--;
                 vb--;
                 vc--;
-                Face newface(&(v[va]), &(v[vc]), &(v[vb])); // invoco il costruttore di faccia
-                f.push_back(newface);                       // inserico la nuova faccia in coda al vettore facce
-                nt++;
+                ta--;
+                tb--;
+                tc--;
+
+                Face newface(&(v[va]), &(v[vc]), &(v[vb]), t[ta], t[tc], t[tb]); // invoco il costruttore di faccia
+
+                textures.push_back(*t[ta]);
+                textures.push_back(*t[tb]);
+                textures.push_back(*t[tc]);
+                f.push_back(newface); // inserico la nuova faccia in coda al vettore facce
                 vb = vc;
                 while (fscanf(file, "%d/%d/%d", &vc, &tc, &nc) > 0)
                 {
+                    //std::printf("More than 3\n");
                     vc--;
-                    Face newface(&(v[va]), &(v[vc]), &(v[vb])); // invoco il costruttore di faccia
-                    f.push_back(newface);                       // inserico la nuova faccia in coda al vettore facce
-                    nt++;
+                    tc--;
+                    Face newface(&(v[va]), &(v[vc]), &(v[vb]), t[ta], t[tc], t[tb]); // invoco il costruttore di faccia
+                    f.push_back(newface);                                            // inserico la nuova faccia in coda al vettore facce
+                    textures.push_back(*t[tc]);
                     vb = vc;
+                    tb = tc;
                 }
             }
             else if (sscanf(buf, "%d/%d", &va, &ta) == 2)
@@ -379,8 +442,11 @@ bool Mesh::LoadFromObj(char *filename)
         }
     }
 
-    //std::printf("dopo SecondPass nv=%d nt=%d\n",nv,nt);
+    //std::printf("dopo SecondPass nv=%d nt=%d\n", nv, nt);
 
+    for (UV *u : t)
+        delete u;
+    t.clear();
     fclose(file);
     return true;
 }

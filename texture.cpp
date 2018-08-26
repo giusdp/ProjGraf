@@ -57,24 +57,29 @@ bool Texture::loadTexture2D(SDL_Surface *surface, bool isText)
     {
         return false;
     }
-    // 1. Generare un nome per un texture object -> glGenTextures(n, &texName)
-    glGenTextures(1, &textureID);
 
+    if (!isReloading)
+    {
+        // 1. Generare un nome per un texture object -> glGenTextures(n, &texName)
+        glGenTextures(1, &textureID);
+    }
     // 2. Associare texture object ad una texture image -> glBindTexture(GL_TEXTURE_2D, texName);
     glBindTexture(GL_TEXTURE_2D, textureID);
-
     // 5. Definire una texture image 2D da un array di texel in texture RAM;
     // Di nuovo, uso la surface per dare i dati necessari per la creazione della texture
     glTexImage2D(GL_TEXTURE_2D, 0, surface->format->BytesPerPixel,
                  surface->w, surface->h, 0, texture_format, GL_UNSIGNED_BYTE, surface->pixels);
 
     // Altra roba glTex
-    if (!isText) gluBuild2DMipmaps(GL_TEXTURE_2D, 3, surface->w, surface->h,
-                      texture_format, GL_UNSIGNED_BYTE, surface->pixels);
+    if (!isText)
+        gluBuild2DMipmaps(GL_TEXTURE_2D, 3, surface->w, surface->h,
+                          texture_format, GL_UNSIGNED_BYTE, surface->pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
     SDL_FreeSurface(surface);
+
+    isReloading = true;
     return true;
 }
 
@@ -83,6 +88,7 @@ GLuint Texture::getTextureID() const
     return textureID;
 }
 
-Texture::~Texture(){
+Texture::~Texture()
+{
     glDeleteTextures(1, &textureID);
 }

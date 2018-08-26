@@ -6,6 +6,9 @@
 #include "skybox.h"
 #include "meteorspawner.h"
 #include "HUD.h"
+#include "collectible.h"
+#include "camera.h"
+#include "finishline.h"
 
 #define FREE_MODE 0
 #define PLAY_MODE 1
@@ -27,55 +30,18 @@ const int PHYS_SAMPLING_STEP = 10; // numero di millisec che un passo di fisica 
 
 int cameraType = 1;
 
+Plane *plane;
 Texture texturePlane;
 Terrain *terrain;
 SkyBox *sky;
 MeteorSpawner *meteorShower;
 HUD *hud;
-
-// setto la posizione della camera
-void setCamera(Plane plane)
-{
-
-    double px = plane.px;
-    double py = plane.py;
-    double pz = plane.pz;
-    double angle = plane.facing;
-    //std::printf("%f %f %f %f \n", px, py, pz, angle);
-    double cosf = cos(angle * M_PI / 180.0);
-    double sinf = sin(angle * M_PI / 180.0);
-    double camd, camh, ex, ey, ez, cx, cy, cz;
-    double cosff, sinff;
-
-    float viewAlpha = 20, viewBeta = 2; // angoli che definiscono la vista
-    float eyeDist = 10.0;                // distanza dell'occhio dall'origine
-
-    // controllo la posizione della camera a seconda dell'opzione selezionata
-    switch (cameraType)
-    {
-    case FREE_MODE:
-        camd = 10;
-        camh = 5;
-        ex = px + camd * sinf;
-        ey = py + camh;
-        ez = pz + camd * cosf;
-        cx = px - camd * sinf;
-        cy = py + camh;
-        cz = pz - camd * cosf;
-        gluLookAt(ex, ey, ez, cx, cy, cz, 0.0, 1.0, 0.0);
-        break;
-    case PLAY_MODE:
-        glTranslatef(0, -7, -eyeDist);
-        glRotatef(viewBeta,  1,0,0);
-        //glRotatef(viewAlpha, 0,1,0);
-        break;
-    default:
-        break;
-    }
-}
+Camera *camera;
+FinishLine *finishLine;
+std::vector<Collectible*> collectibles;
 
 /* Esegue il Rendering della scena */
-void render(SDL_Window *win, Plane plane)
+void render(SDL_Window *win)
 {
 
     // un nuovo frame
@@ -107,7 +73,7 @@ void render(SDL_Window *win, Plane plane)
     glLightfv(GL_LIGHT0, GL_POSITION, tmpv);
 
     // settiamo matrice di vista
-    setCamera(plane);
+    camera->update();
 
     static float tmpcol[4] = {1, 1, 1, 1};
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpcol);
@@ -115,10 +81,12 @@ void render(SDL_Window *win, Plane plane)
 
     glEnable(GL_LIGHTING);
 
-    sky->render(); // disegna il cielo come sfondo
+    sky->render();     // disegna il cielo come sfondo
     terrain->render(); // disegna il terreno
-    plane.Render();    // disegna il giocatore
-    meteorShower->render(); // disegna gli oggetti
+    plane->Render();        // disegna il giocatore
+    //meteorShower->render(); // disegna gli oggetti
+    for (auto c: collectibles) c->render();
+    finishLine->render();
     hud->render();
 
     // attendiamo la fine della rasterizzazione di
@@ -136,6 +104,9 @@ void render(SDL_Window *win, Plane plane)
 
 int main(int argc, char *argv[])
 {
+    srand(time(NULL)); // seed rng per gli oggetti da evitare e raccogliere
+    rand();
+
     SDL_Window *win;
     SDL_GLContext mainContext;
     Uint32 windowID;
@@ -178,7 +149,7 @@ int main(int argc, char *argv[])
 
     // INIT TESTO PER HUD
     TTF_Init();
-    TTF_Font *font = TTF_OpenFont("Assets/virgo.ttf", 12);
+    TTF_Font *font = TTF_OpenFont("Assets/neuropol.ttf", 12);
     if (font == nullptr)
     {
         std::fprintf(stderr, "Errore lettura font.\n");
@@ -190,10 +161,15 @@ int main(int argc, char *argv[])
     }
 
     // *** ALLOCAZIONE ENTITA ***
-    Plane *plane = new Plane(Mesh((char *)"Assets/lowpolyplane.obj")); // l'aereoplanino
+    plane = new Plane(Mesh((char *)"Assets/lowpolyplane.obj")); // l'aereoplanino
+    camera = new Camera(*plane);
     terrain = new Terrain();
     sky = new SkyBox((char *)"Assets/hills_ft.tga");
-    meteorShower = new MeteorSpawner();
+    finishLine = new FinishLine(Mesh((char *)"Assets/Finish.obj"));
+    //meteorShower = new MeteorSpawner();
+    collectibles.push_back(new Collectible());
+
+
     //Creo il controller per gestire gli input con il Command Pattern
     Controller controller = Controller();
 
@@ -240,7 +216,8 @@ int main(int argc, char *argv[])
                 // dobbiamo ridisegnare la finestra
                 if (e.window.event == SDL_WINDOWEVENT_EXPOSED)
                 {
-                    render(win, *plane);
+                    //hud->resize(scrW, scrH);
+                    render(win);
                 }
                 else
                 {
@@ -254,8 +231,8 @@ int main(int argc, char *argv[])
                             scrW = e.window.data1;
                             scrH = e.window.data2;
                             glViewport(0, 0, scrW, scrH);
-                            hud->resize(scrW, scrH);
-                            render(win, *plane);
+                            //hud->resize(scrW, scrH);
+                            render(win);
                             break;
                         }
                         default:
@@ -301,7 +278,7 @@ int main(int argc, char *argv[])
             }
 
             if (doneSomething)
-                render(win, *plane);
+                render(win);
             //redraw();
             else
             {
@@ -312,8 +289,11 @@ int main(int argc, char *argv[])
     std::cout << "Uscito dal game loop." << std::endl;
 
     // *** CLEANING UP ****
-    delete plane, terrain, sky, meteorShower, hud;
-    TTF_CloseFont(font);  
+    delete plane, terrain, sky, hud, camera, finishLine;
+    for (auto c : collectibles) delete c;
+    collectibles.clear();
+    //delete meteorShower;
+    TTF_CloseFont(font);
     SDL_GL_DeleteContext(mainContext);
     SDL_DestroyWindow(win);
     TTF_Quit();

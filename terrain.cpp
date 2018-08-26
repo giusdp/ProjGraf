@@ -49,6 +49,7 @@ void Terrain::generateTerrain() {
 }
 
 double flying = 0;
+double incrX = 0.05, incrY = 0.1, incrZ = 0.0;
 
 void Terrain::render() {
 
@@ -70,18 +71,18 @@ void Terrain::render() {
             auto index = (int) (x + z * (VERTEX_COUNT - 1));
             noise = (float) perlinNoise.noise(xOff, yOff, zOff);
             faces[index].v[0]->p.coord[1] = mapRange(noise, 0, 1, -maxHeight, maxHeight);
-            xOff += 0.05f;
-            //zOff += 0.01;
+            xOff += incrX;
+            zOff += incrZ;
             noise = (float) perlinNoise.noise(xOff, yOff, zOff);
             faces[index].v[1]->p.coord[1] = mapRange(noise, 0, 1, -maxHeight, maxHeight);
-            xOff += 0.05f;
-            //zOff += 0.01;
+            xOff += incrX;
+            zOff += incrZ;
             noise = (float) perlinNoise.noise(xOff, yOff, zOff);
             faces[index].v[2]->p.coord[1] = mapRange(noise, 0, 1, -maxHeight, maxHeight);
-            //xOff += 0.05f;
-            //zOff += 0.01;
+            xOff += incrX;
+            zOff += incrZ;
         }
-        yOff += 0.1;
+        yOff += incrY;
     }
     if (flying > 10000) flying = 0; // per non rischiare buffer overflow
     flying += 0.01;

@@ -11,38 +11,47 @@
 #include "texture.h"
 #include "point3.h"
 #include "utils.h"
+#include <string>
+
 class HUD
 {
 
-  public:
-    int scrW, scrH;
+public:
+  int scrW, scrH;
 
-    void resize(int w, int h);
-    // Costruttore
-    HUD(int scrW, int scrH, TTF_Font *font);
+  void resize(int w, int h);
+  // Costruttore
+  HUD(int scrW, int scrH, TTF_Font *font);
 
-    void update();
+  void update();
 
-    // metodo render
-    void render();
+  // metodo render
+  void render();
 
-    virtual ~HUD()
-    {
-        delete text;
-    }
+  virtual ~HUD()
+  {
+    delete textureScore, textureStage;
+  }
 
-  private:
-    bool useHUD = true;
+private:
+  int counter = 0;
+  bool stageChanged = true;
 
-    TTF_Font *font;
+  bool useHUD = true;
+  TTF_Font *font;
 
-    Texture *text;
+  const std::string scoreText = "SCORE: ";
+  const std::string stageText = "STAGE: ";
 
-    int score = 0;
-    SDL_Rect scoreRect;
+  Texture *textureScore;
+  Texture *textureStage;
 
-    void SetCoordToPixel();
-    void drawQuad(float x, float y,float w,float h);
+  int score = 0, stage = 1;
+
+  SDL_Rect scoreRect;
+  SDL_Rect stageRect;
+
+  void drawQuad(float x, float y, float w, float h);
 };
 
 #endif //PROJGRAF_HUD_H
