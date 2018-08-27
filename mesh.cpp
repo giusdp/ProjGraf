@@ -38,36 +38,36 @@ void Mesh::RenderNxVxT(Texture texture) // come RenderNxV ma con una texture
     }
     else
     {
+        glDisable(GL_LIGHTING);
+        glColor3f(1,1,1);
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
-        glBegin(GL_TRIANGLES);
-        glColor3f(0.2, 0.2, 0.2);
-        for (UV uv : textures){
-            glTexCoord2f(uv.u, uv.v);
-        }
+        
+        // for (UV uv : textures){
+        //     glTexCoord2f(uv.u, uv.v);
+        // }
 
+        glBegin(GL_TRIANGLES);
 
         for (int i = 0; i < f.size(); i++)
         {
             glTexCoord2f(f[i].uv[0]->u, f[i].uv[0]->v);
-            (f[i].v[0])->n.SendAsNormal(); // gouroud shading (o phong?)
             (f[i].v[0])->p.SendAsVertex();
+            //(f[i].v[0])->n.SendAsNormal(); // gouroud shading (o phong?)
 
             glTexCoord2f(f[i].uv[1]->u, f[i].uv[1]->v);
-            (f[i].v[1])->n.SendAsNormal();
             (f[i].v[1])->p.SendAsVertex();
+            //(f[i].v[1])->n.SendAsNormal();
 
             glTexCoord2f(f[i].uv[2]->u, f[i].uv[2]->v);
-            (f[i].v[2])->n.SendAsNormal();
             (f[i].v[2])->p.SendAsVertex();
+            //(f[i].v[2])->n.SendAsNormal();
         }
         glEnd();
 
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
         glDisable(GL_TEXTURE_2D);
+        glEnable(GL_LIGHTING);
+
     }
 }
 // Computo normali per vertice

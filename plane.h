@@ -23,10 +23,9 @@
 class Plane
 {
   private:
-    Texture envMapTexture;
+    Texture *envMapTexture;
 
     void RenderAllParts(bool usecolor);
-    void SetupEnvmapTexture();
 
     void calcTurningAnimation();
     void animationStep(bool move1, bool move2, float &turning, float speed, float max);
@@ -44,8 +43,8 @@ class Plane
     void DoStep(); // computa un passo del motore fisico
     explicit Plane(Mesh lowPolyPlane) : lowPolyPlane(std::move(lowPolyPlane))
     {
-        envMapTexture = Texture();
-        envMapTexture.loadTexture2D((char *)"Assets/envmap_flipped.jpg");
+        envMapTexture = new Texture();
+        envMapTexture->loadTexture2D((char *)"Assets/envmap_flipped.jpg");
         Init();
     } // costruttore
 
@@ -57,6 +56,10 @@ class Plane
     float velSterzo{}, velRitornoSterzo{}, accMax{}, grip{};
 
     float attritoX = 0.8, attritoY = 1.0, attritoZ = 0.991; // attriti
+
+    virtual ~Plane(){
+      delete envMapTexture;
+    }
 };
 
 #endif //PROJGRAF_PLANE_H

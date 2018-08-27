@@ -3,8 +3,8 @@
 void FinishLine::render()
 {
     glPushMatrix();
-    glTranslatef(0, 0, -10);
-    glColor3f(255, 0, 0);
-    finishLineModel.RenderNxV();
+    glTranslatef(0, 0, -20);
+    glColor3f(1,1,1);
+    finishLineModel.RenderNxF();
     glPopMatrix();
 }

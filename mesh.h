@@ -68,13 +68,14 @@ class Face
 
 class Mesh
 {
+
+  public:
     std::vector<Vertex> v; // vettore di vertici
     std::vector<Face> f;   // vettore di facce
     std::vector<Edge> e;   // vettore di edge (per ora, non usato)
 
     std::vector<UV> textures; // vettore delle textures
 
-  public:
     // costruttore con caricamento
     Mesh(char *filename)
     {

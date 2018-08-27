@@ -3,8 +3,6 @@
 #define FREE_MODE 0
 #define PLAY_MODE 1
 
-extern bool useEnvmap; // var globale esterna: per usare l'evnrionment mapping
-extern bool useShadow; // var globale esterna: per generare l'ombra
 extern int cameraType; // var globale esterna per fare i movimenti opportuni
 
 float turning_rotation_Z = 0, max_turn_Z = 20, turn_speed_Z = 0.5f;
@@ -58,18 +56,6 @@ void Plane::Render() {
 
     RenderAllParts(true);
 
-    // ombra!
-    if (useShadow) {
-        glColor3f(0.4, 0.4, 0.4); // colore fisso
-        glTranslatef(0, 0.01, 0); // alzo l'ombra di un epsilon per evitare z-fighting con il pavimento
-        glScalef(1.01, 0, 1.01);  // appiattisco sulla Y, ingrandisco dell'1% sulla Z e sulla X
-        glDisable(GL_LIGHTING); // niente lighing per l'ombra
-        RenderAllParts(false);  // disegno la macchina appiattita
-
-        glEnable(GL_LIGHTING);
-    }
-    glPopMatrix();
-
 
     glPopMatrix();
 }
@@ -98,34 +84,13 @@ void Plane::DoStep() {
 void Plane::RenderAllParts(bool usecolor) {
     // disegna la carliga con una mesh
     glPushMatrix();
-    if (!useEnvmap) {
-        if (usecolor)
-            glColor3f(1, 0, 0); // colore rosso, da usare con Lighting
-    } else {
-        if (usecolor)
-            SetupEnvmapTexture();
-    }
-    glScalef(1.5, 1.5, 1.5);
+    
+    // glScalef(1.5, 1.5, 1.5);
     lowPolyPlane.RenderNxV(); // rendering delle mesh carlinga usando normali per vertice
     if (usecolor)
         glEnable(GL_LIGHTING);
 
     glPopMatrix();
-}
-
-
-// Funzione che prepara tutto per usare un env map
-void Plane::SetupEnvmapTexture() {
-    // facciamo binding con la texture 1
-    glBindTexture(GL_TEXTURE_2D, envMapTexture.getTextureID());
-
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_TEXTURE_GEN_S); // abilito la generazione automatica delle coord texture S e T
-    glEnable(GL_TEXTURE_GEN_T);
-    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP); // Env map
-    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-    glColor3f(1, 1, 1); // metto il colore neutro (viene moltiplicato col colore texture, componente per componente)
-    glDisable(GL_LIGHTING); // disabilito il lighting OpenGL standard (lo faccio con la texture)
 }
 
 void Plane::calcTurningAnimation() {

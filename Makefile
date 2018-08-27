@@ -4,8 +4,8 @@ CPP  = g++
 CC   = gcc
 BIN  = ProjGraf
 
-OBJ  = main.o plane.o controller.o mesh.o terrain.o HUD.o meteorspawner.o perlinnoise.o skybox.o texture.o finishline.o
-LINKOBJ  = main.o plane.o controller.o mesh.o terrain.o HUD.o meteorspawner.o perlinnoise.o skybox.o texture.o finishline.o
+OBJ  = main.o plane.o controller.o mesh.o terrain.o HUD.o meteorspawner.o perlinnoise.o skybox.o texture.o finishline.o collectable.o
+LINKOBJ  = main.o plane.o controller.o mesh.o terrain.o HUD.o meteorspawner.o perlinnoise.o skybox.o texture.o finishline.o collectable.o
 
 # Library linking
 OS := $(shell uname)
@@ -73,3 +73,6 @@ texture.o: texture.cpp
 
 finishline.o: finishline.cpp
 	$(CPP) -c $(FRMPATH) finishline.cpp -o finishline.o
+
+collectable.o: collectable.cpp
+	$(CPP) -c $(FRMPATH) collectable.cpp -o collectable.o

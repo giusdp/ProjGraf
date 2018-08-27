@@ -6,7 +6,7 @@
 #include "skybox.h"
 #include "meteorspawner.h"
 #include "HUD.h"
-#include "collectible.h"
+#include "collectable.h"
 #include "camera.h"
 #include "finishline.h"
 
@@ -14,8 +14,6 @@
 #define PLAY_MODE 1
 
 bool useWireframe = false;
-bool useEnvmap = false;
-bool useShadow = false;
 
 int scrW = 800, scrH = 600; // altezza e larghezza viewport (in pixels)
 
@@ -38,7 +36,13 @@ MeteorSpawner *meteorShower;
 HUD *hud;
 Camera *camera;
 FinishLine *finishLine;
-std::vector<Collectible*> collectibles;
+std::vector<Collectable *> collectables;
+
+void incrCollectedItems(){
+    hud->score += 500;
+    hud->collectedItems++;
+    hud->justCollected = true;
+}
 
 /* Esegue il Rendering della scena */
 void render(SDL_Window *win)
@@ -83,9 +87,10 @@ void render(SDL_Window *win)
 
     sky->render();     // disegna il cielo come sfondo
     terrain->render(); // disegna il terreno
-    plane->Render();        // disegna il giocatore
-    //meteorShower->render(); // disegna gli oggetti
-    for (auto c: collectibles) c->render();
+    plane->Render();   // disegna il giocatore
+    //meteorShower->render(); // disegna le meteore
+    for (auto c : collectables)
+        c->render();
     finishLine->render();
     hud->render();
 
@@ -117,8 +122,13 @@ int main(int argc, char *argv[])
         std::fprintf(stderr, "Errore inizializzazione sdl.\n");
         return 1;
     }
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     // facciamo una finestra di scrW x scrH pixels
@@ -166,9 +176,10 @@ int main(int argc, char *argv[])
     terrain = new Terrain();
     sky = new SkyBox((char *)"Assets/hills_ft.tga");
     finishLine = new FinishLine(Mesh((char *)"Assets/Finish.obj"));
-    //meteorShower = new MeteorSpawner();
-    collectibles.push_back(new Collectible());
-
+    meteorShower = new MeteorSpawner();
+    collectables.push_back(new Collectable((char *)"Assets/PersonalPic.jpeg"));
+    collectables.push_back(new Collectable((char *)"Assets/PersonalPicAndrew.jpeg"));
+    //collectables.push_back(new Collectable((char *)"Assets/PersonalPic.jpeg"));
 
     //Creo il controller per gestire gli input con il Command Pattern
     Controller controller = Controller();
@@ -202,10 +213,6 @@ int main(int argc, char *argv[])
                     cameraType = !cameraType;
                 else if (e.key.keysym.sym == 'v')
                     useWireframe = !useWireframe;
-                else if (e.key.keysym.sym == 'b')
-                    useEnvmap = !useEnvmap;
-                else if (e.key.keysym.sym == 'n')
-                    useShadow = !useShadow;
                 controller.handleInputs(plane, e, true);
                 break;
             case SDL_KEYUP:
@@ -267,6 +274,7 @@ int main(int argc, char *argv[])
             {
                 plane->DoStep();
                 hud->update();
+                for (auto c : collectables) c->update();
                 nstep++;
                 doneSomething = true;
                 timeNow = SDL_GetTicks();
@@ -290,9 +298,10 @@ int main(int argc, char *argv[])
 
     // *** CLEANING UP ****
     delete plane, terrain, sky, hud, camera, finishLine;
-    for (auto c : collectibles) delete c;
-    collectibles.clear();
-    //delete meteorShower;
+    for (auto c : collectables)
+        delete c;
+    collectables.clear();
+    delete meteorShower;
     TTF_CloseFont(font);
     SDL_GL_DeleteContext(mainContext);
     SDL_DestroyWindow(win);
