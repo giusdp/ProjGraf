@@ -67,7 +67,6 @@ void HUD::update()
         std::string s = itemsText;
         s += std::to_string(collectedItems);
         s +="/10";
-        if (collectedItems == 10) {stage++; stageChanged = true;}
         SDL_Surface *surfaceText = TTF_RenderText_Blended(font, s.c_str(), itemsColor);
         textureItems->loadTexture2D(surfaceText, true);
         justCollected = false;

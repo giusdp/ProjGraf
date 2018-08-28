@@ -5,12 +5,12 @@
 
 class FinishLine
 {
-  public:
-    Mesh finishLineModel;
+public:
+  float pz = -150, vzf = 0.03f;
 
-    FinishLine(Mesh mesh) : finishLineModel(mesh){}
+  void render();
 
-    void render();
+  void checkCollision();
 };
 
 #endif //PROJGRAF_FINISHLINE_H

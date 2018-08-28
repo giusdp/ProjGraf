@@ -3,13 +3,13 @@
 
 #include "plane.h"
 
-#define FREE_MODE 0
-#define PLAY_MODE 1
 
 extern int cameraType;
 
 class Camera
 {
+#define FREE_MODE 0
+#define PLAY_MODE 1
   public:
     Plane *plane;
 

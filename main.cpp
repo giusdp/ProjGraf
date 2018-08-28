@@ -38,10 +38,17 @@ Camera *camera;
 FinishLine *finishLine;
 std::vector<Collectable *> collectables;
 
-void incrCollectedItems(){
+void incrCollectedItems()
+{
     hud->score += 500;
     hud->collectedItems++;
     hud->justCollected = true;
+    if (hud->collectedItems == 10)
+    {
+        hud->stage++;
+        hud->stageChanged = true;
+        terrain->changeTerrain(hud->stage);
+    }
 }
 
 /* Esegue il Rendering della scena */
@@ -175,7 +182,7 @@ int main(int argc, char *argv[])
     camera = new Camera(*plane);
     terrain = new Terrain();
     sky = new SkyBox((char *)"Assets/hills_ft.tga");
-    finishLine = new FinishLine(Mesh((char *)"Assets/Finish.obj"));
+    finishLine = new FinishLine();
     meteorShower = new MeteorSpawner();
     collectables.push_back(new Collectable((char *)"Assets/PersonalPic.jpeg"));
     collectables.push_back(new Collectable((char *)"Assets/PersonalPicAndrew.jpeg"));
@@ -213,6 +220,8 @@ int main(int argc, char *argv[])
                     cameraType = !cameraType;
                 else if (e.key.keysym.sym == 'v')
                     useWireframe = !useWireframe;
+                else if (e.key.keysym.sym == SDLK_SPACE)
+                    incrCollectedItems();
                 controller.handleInputs(plane, e, true);
                 break;
             case SDL_KEYUP:
@@ -274,7 +283,8 @@ int main(int argc, char *argv[])
             {
                 plane->DoStep();
                 hud->update();
-                for (auto c : collectables) c->update();
+                for (auto c : collectables)
+                    c->update();
                 nstep++;
                 doneSomething = true;
                 timeNow = SDL_GetTicks();

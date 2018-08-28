@@ -6,14 +6,18 @@
 #include "utils.h"
 extern bool useWireframe;
 
-Terrain::Terrain() {
+Terrain::Terrain()
+{
     generateTerrain();
 }
 
-void Terrain::generateTerrain() {
+void Terrain::generateTerrain()
+{
 
-    for (int z = 0; z < VERTEX_COUNT; z++) {
-        for (int x = 0; x < VERTEX_COUNT; x++) {
+    for (int z = 0; z < VERTEX_COUNT; z++)
+    {
+        for (int x = 0; x < VERTEX_COUNT; x++)
+        {
             float grid_x = x * SIZE;
             float grid_z = z * SIZE;
             Vertex v = Vertex();
@@ -23,8 +27,10 @@ void Terrain::generateTerrain() {
         }
     }
 
-    for (int z = 0; z < VERTEX_COUNT - 1; z++) {
-        for (int x = 0; x < VERTEX_COUNT - 1; x++) {
+    for (int z = 0; z < VERTEX_COUNT - 1; z++)
+    {
+        for (int x = 0; x < VERTEX_COUNT - 1; x++)
+        {
             Face f = Face(&grid[x + z * VERTEX_COUNT], &grid[x + 1 + z * VERTEX_COUNT],
                           &grid[(z + 1) * VERTEX_COUNT + x]);
             f.ComputeNormal();
@@ -35,9 +41,12 @@ void Terrain::generateTerrain() {
     // Creo le facce mancanti, però così disegno più volte gli stessi vertici e linee.
     // Per il lato destro e basso della griglia risolvo il problema della linea mancante
     // a discapito del ridisegno dei vertici in comune delle facce.
-    if (!useWireframe) {
-        for (int z = 0; z < VERTEX_COUNT - 1; z++) {
-            for (int x = (int) VERTEX_COUNT - 1; x > 0; x--) {
+    if (!useWireframe)
+    {
+        for (int z = 0; z < VERTEX_COUNT - 1; z++)
+        {
+            for (int x = (int)VERTEX_COUNT - 1; x > 0; x--)
+            {
                 Face f = Face(&grid[x + z * VERTEX_COUNT], &grid[x + (z + 1) * VERTEX_COUNT],
                               &grid[(x - 1) + (z + 1) * VERTEX_COUNT]);
                 f.ComputeNormal();
@@ -45,13 +54,38 @@ void Terrain::generateTerrain() {
             }
         }
     }
-
 }
 
 double flying = 0;
 double incrX = 0.05, incrY = 0.1, incrZ = 0.0;
 
-void Terrain::render() {
+void Terrain::changeTerrain(int stage)
+{
+    if (stage == 2)
+    {
+        incrY = .1;
+        incrX = 0.9;
+        //incrZ =0.05;
+    }
+    else if (stage == 3)
+    {
+        incrY = .001;
+        incrX = .05;
+        //incrZ =0.1;
+    }
+    else
+    {
+        double r = ((double)rand() / (RAND_MAX));
+        incrX = r;
+        r = ((double)rand() / (RAND_MAX));
+        incrZ = r;
+        r = ((double)rand() / (RAND_MAX));
+        incrY = r;
+    }
+}
+
+void Terrain::render()
+{
 
     glPushMatrix();
     glDisable(GL_TEXTURE_2D);
@@ -65,28 +99,30 @@ void Terrain::render() {
     // Flying è un trucchetto per far sembrare che si sta volando sopra il terreno
     double xOff = 0, yOff = flying, zOff = 0;
     float noise;
-    for (int z = 0; z < VERTEX_COUNT - 1; z++) {
+    for (int z = 0; z < VERTEX_COUNT - 1; z++)
+    {
         xOff = 0;
-        for (int x = 0; x < VERTEX_COUNT - 1; x++) {
-            auto index = (int) (x + z * (VERTEX_COUNT - 1));
-            noise = (float) perlinNoise.noise(xOff, yOff, zOff);
+        for (int x = 0; x < VERTEX_COUNT - 1; x++)
+        {
+            auto index = (int)(x + z * (VERTEX_COUNT - 1));
+            noise = (float)perlinNoise.noise(xOff, yOff, zOff);
             faces[index].v[0]->p.coord[1] = mapRange(noise, 0, 1, -maxHeight, maxHeight);
             xOff += incrX;
             zOff += incrZ;
-            noise = (float) perlinNoise.noise(xOff, yOff, zOff);
+            noise = (float)perlinNoise.noise(xOff, yOff, zOff);
             faces[index].v[1]->p.coord[1] = mapRange(noise, 0, 1, -maxHeight, maxHeight);
             xOff += incrX;
             zOff += incrZ;
-            noise = (float) perlinNoise.noise(xOff, yOff, zOff);
+            noise = (float)perlinNoise.noise(xOff, yOff, zOff);
             faces[index].v[2]->p.coord[1] = mapRange(noise, 0, 1, -maxHeight, maxHeight);
             xOff += incrX;
             zOff += incrZ;
         }
         yOff += incrY;
     }
-    if (flying > 10000) flying = 0; // per non rischiare buffer overflow
+    if (flying > 10000)
+        flying = 0; // per non rischiare buffer overflow
     flying += 0.01;
-
 
     // Potevo usare usare vertici e facce per creare un oggetto mesh
     // e poi utilizzare i metodi Render.
@@ -94,7 +130,8 @@ void Terrain::render() {
     // Quindi ho scritto il codice per il rendering.
     GLenum mode = (useWireframe ? GL_LINE_LOOP : GL_TRIANGLES);
     // Disegnamo tutte le facce
-    for (auto &face : faces) {
+    for (auto &face : faces)
+    {
         glBegin(mode);
 
         // Mandando solo la normale della faccia si ha flat shading
@@ -120,16 +157,19 @@ void Terrain::render() {
     glPopMatrix();
 }
 
-void Terrain::vertexColor(float y) {
+void Terrain::vertexColor(float y)
+{
     float red = 1, green = 1, blue = 1;
-    if (y >= 0 && y <= maxHeight) {
-// interpolate between (1.0f, 0.0f, 0.0f) and (0.0f, 1.0f, 0.0f)
+    if (y >= 0 && y <= maxHeight)
+    {
+        // interpolate between (1.0f, 0.0f, 0.0f) and (0.0f, 1.0f, 0.0f)
         green = y / maxHeight;
         blue = 1.0f - green;
         red = 0.0f;
-
-    } else if (y >= -maxHeight && y < 0) {
-// interpolate between (0.0f, 1.0f, 0.0f) and (0.0f, 0.0f, 1.0f)
+    }
+    else if (y >= -maxHeight && y < 0)
+    {
+        // interpolate between (0.0f, 1.0f, 0.0f) and (0.0f, 0.0f, 1.0f)
         red = 0.0f;
         green = (-y) / maxHeight;
         blue = 1.0f - green;
@@ -137,6 +177,3 @@ void Terrain::vertexColor(float y) {
 
     glColor3f(red, green, blue);
 }
-
-
-

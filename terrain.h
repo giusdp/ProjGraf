@@ -31,6 +31,7 @@ public:
 
     void render();
 
+    void changeTerrain(int stage);
 };
 
 
