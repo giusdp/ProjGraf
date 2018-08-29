@@ -6,8 +6,7 @@
 extern bool useWireframe;
 
 SDL_Color scoreColor = {255, 0, 20, 0},
-stageColor ={20, 0, 255, 0}, itemsColor ={20, 255, 0, 0};
-
+          stageColor = {20, 0, 255, 0}, itemsColor = {20, 255, 0, 0};
 
 HUD::HUD(int scrW, int scrH, TTF_Font *font) : scrW(scrW), scrH(scrH), font(font)
 {
@@ -26,6 +25,14 @@ HUD::HUD(int scrW, int scrH, TTF_Font *font) : scrW(scrW), scrH(scrH), font(font
     itemsRect.y = 0;
     itemsRect.w = 3;
     itemsRect.h = 1;
+
+    gameOverRect.x = -8;
+    gameOverRect.y = 7;
+    gameOverRect.w = 15;
+    gameOverRect.h = 2;
+
+    textureGameOver = new Texture();
+    textureGameOver2 = new Texture();
 
     SDL_Surface *surfaceTextScore = TTF_RenderText_Blended(font, scoreText.c_str(), scoreColor);
     textureScore = new Texture();
@@ -50,8 +57,33 @@ void HUD::resize(int w, int h)
     // scoreRect.y = y;
 }
 
+void HUD::gameOver()
+{
+    isGameOver = true;
+    std::string s = gameOverText1; // aggiungi lo score
+    s += std::to_string(score);
+    SDL_Surface *surfaceText = TTF_RenderText_Blended(font, s.c_str(), scoreColor);
+    textureGameOver->loadTexture2D(surfaceText, true);
+
+    SDL_Surface *surfaceText2 = TTF_RenderText_Blended(font, gameOverText2.c_str(), scoreColor);
+    textureGameOver2->loadTexture2D(surfaceText2, true);
+
+}
+
+void HUD::reset(){
+    isGameOver = false;
+    stageChanged = true;
+    stage = 1;
+    justCollected = true;
+    collectedItems = 0;
+    score = -1;
+    counter = 100;
+}
+
 void HUD::update()
 {
+    if (isGameOver)
+        return;
     if (stageChanged)
     {
         std::string s = stageText;
@@ -60,18 +92,18 @@ void HUD::update()
         textureStage->loadTexture2D(surfaceText, true);
         stageChanged = false;
         collectedItems = 0;
-        justCollected=true;
+        justCollected = true;
     }
     if (justCollected)
     {
         std::string s = itemsText;
         s += std::to_string(collectedItems);
-        s +="/10";
+        s += "/10";
         SDL_Surface *surfaceText = TTF_RenderText_Blended(font, s.c_str(), itemsColor);
         textureItems->loadTexture2D(surfaceText, true);
         justCollected = false;
     }
-    if (counter == 100)
+    if (counter >= 100)
     {
         score++;
         counter = 0;
@@ -102,10 +134,19 @@ void HUD::render()
     glBindTexture(GL_TEXTURE_2D, textureStage->getTextureID());
     drawQuad(stageRect.x, stageRect.y, stageRect.w, stageRect.h);
 
-     // ITEMS
+    // ITEMS
     glBindTexture(GL_TEXTURE_2D, textureItems->getTextureID());
     drawQuad(itemsRect.x, itemsRect.y, itemsRect.w, itemsRect.h);
 
+    if (isGameOver)
+    {
+        glBindTexture(GL_TEXTURE_2D, textureGameOver->getTextureID());
+        drawQuad(gameOverRect.x, gameOverRect.y, gameOverRect.w, gameOverRect.h);
+
+        glBindTexture(GL_TEXTURE_2D, textureGameOver2->getTextureID());
+        drawQuad(gameOverRect.x+3, gameOverRect.y-2, gameOverRect.w-5, gameOverRect.h-1);
+    }
+    
     glDisable(GL_TEXTURE_2D);
 
     glDisable(GL_BLEND);

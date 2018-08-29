@@ -48,7 +48,16 @@ void incrCollectedItems()
         hud->stage++;
         hud->stageChanged = true;
         terrain->changeTerrain(hud->stage);
+        finishLine->reset();
     }
+}
+
+void reset()
+{
+    finishLine->reset();
+    hud->reset();
+    for (auto c : collectables)
+        c->randomSpawn();
 }
 
 /* Esegue il Rendering della scena */
@@ -182,7 +191,7 @@ int main(int argc, char *argv[])
     camera = new Camera(*plane);
     terrain = new Terrain();
     sky = new SkyBox((char *)"Assets/hills_ft.tga");
-    finishLine = new FinishLine();
+    finishLine = new FinishLine(font);
     meteorShower = new MeteorSpawner();
     collectables.push_back(new Collectable((char *)"Assets/PersonalPic.jpeg"));
     collectables.push_back(new Collectable((char *)"Assets/PersonalPicAndrew.jpeg"));
@@ -216,6 +225,8 @@ int main(int argc, char *argv[])
                     std::cout << "ESC premuto" << std::endl;
                     done = true;
                 }
+                else if (e.key.keysym.sym == 'r')
+                    reset();
                 else if (e.key.keysym.sym == 'c')
                     cameraType = !cameraType;
                 else if (e.key.keysym.sym == 'v')
@@ -283,8 +294,15 @@ int main(int argc, char *argv[])
             {
                 plane->DoStep();
                 hud->update();
-                for (auto c : collectables)
-                    c->update();
+                if (finishLine->hasArrived())
+                {
+                    hud->gameOver();
+                }
+                else
+                {
+                    for (auto c : collectables)
+                        c->update();
+                }
                 nstep++;
                 doneSomething = true;
                 timeNow = SDL_GetTicks();

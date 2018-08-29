@@ -31,12 +31,17 @@ public:
 
   void update();
 
+  void gameOver();
+  bool isGameOver = false;
+
+  void reset();
+
   // metodo render
   void render();
 
   virtual ~HUD()
   {
-    delete textureScore, textureStage, textureItems;
+    delete textureScore, textureStage, textureItems, textureGameOver, textureGameOver2;
   }
 
 private:
@@ -48,15 +53,19 @@ private:
   const std::string scoreText = "SCORE: ";
   const std::string stageText = "STAGE: ";
   const std::string itemsText = "ITEMS: ";
+  const std::string gameOverText1 = "GAME OVER!    YOUR SCORE IS ";
+  const std::string gameOverText2 = "Press R to start again!"; 
 
   Texture *textureScore;
   Texture *textureStage;
   Texture *textureItems;
-
+  Texture *textureGameOver;
+  Texture *textureGameOver2;
 
   SDL_Rect scoreRect;
   SDL_Rect stageRect;
   SDL_Rect itemsRect;
+  SDL_Rect gameOverRect;
 
   void drawQuad(float x, float y, float w, float h);
 };
