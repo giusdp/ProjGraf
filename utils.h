@@ -12,8 +12,6 @@
 static void drawSphere(float r, float lats, float longs)
 {
 
-    glPushMatrix();
-    glTranslatef(0, 0, -64);
     int i, j;
     for (i = 0; i <= lats; i++)
     {
@@ -40,7 +38,6 @@ static void drawSphere(float r, float lats, float longs)
         }
         glEnd();
     }
-    glPopMatrix();
 }
 
 static float mapRange(float x, float a, float b, float c, float d)

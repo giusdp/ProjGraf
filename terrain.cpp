@@ -58,20 +58,27 @@ void Terrain::generateTerrain()
 
 double flying = 0;
 double incrX = 0.05, incrY = 0.1, incrZ = 0.0;
-
+bool justChanged = false;
 void Terrain::changeTerrain(int stage)
 {
-    if (stage == 2)
+    currentStage = (stage % 4);
+    if (currentStage == 0)
+    {
+        incrX = 0.05, incrY = 0.1, incrZ = 0.0, maxHeight = 15;
+    }
+    else if (currentStage == 1)
     {
         incrY = .1;
         incrX = 0.9;
         //incrZ =0.05;
+        maxHeight = 20;
     }
-    else if (stage == 3)
+    else if (currentStage == 2)
     {
         incrY = .001;
         incrX = .05;
         //incrZ =0.1;
+        maxHeight = 10;
     }
     else
     {
@@ -81,6 +88,7 @@ void Terrain::changeTerrain(int stage)
         incrZ = r;
         r = ((double)rand() / (RAND_MAX));
         incrY = r;
+        justChanged = true;
     }
 }
 
@@ -89,11 +97,12 @@ void Terrain::render()
 
     glPushMatrix();
     glDisable(GL_TEXTURE_2D);
-    glColor3f(.5, .5, .5);
+    glColor3f(1,1,1);
     glLineWidth(1.0);
 
     glRotatef(180, 0, 1, 0);
     glTranslatef(xOffset, -10, 0);
+    glEnable(GL_LIGHTING);
 
     // Calcolo nuova altezza per ogni vertice con perlin noise.
     // Flying è un trucchetto per far sembrare che si sta volando sopra il terreno
@@ -157,23 +166,38 @@ void Terrain::render()
     glPopMatrix();
 }
 
+// int changeCounter = 0;
 void Terrain::vertexColor(float y)
 {
     float red = 1, green = 1, blue = 1;
-    if (y >= 0 && y <= maxHeight)
-    {
-        // interpolate between (1.0f, 0.0f, 0.0f) and (0.0f, 1.0f, 0.0f)
-        green = y / maxHeight;
-        blue = 1.0f - green;
-        red = 0.0f;
-    }
-    else if (y >= -maxHeight && y < 0)
-    {
-        // interpolate between (0.0f, 1.0f, 0.0f) and (0.0f, 0.0f, 1.0f)
-        red = 0.0f;
-        green = (-y) / maxHeight;
-        blue = 1.0f - green;
-    }
 
+        if (y >= 0 && y <= maxHeight)
+        {
+            green = y / maxHeight;
+            blue = 1.0f - green;
+            red = 0.0f;
+        }
+        else
+        {
+            green = (-y) / maxHeight;
+            blue = 1.0f - green;
+            red = 0.0f;
+        }
+    
+    // if (currentStage == 3)
+    // {
+    //     if (justChanged)
+    //     {
+    //         justChanged = false;
+    //         red = (rand() % 255) / 255.0f;
+    //         green = (rand() % 255) / 255.0f;
+    //         blue = (rand() % 255) / 255.0f;
+    //     }
+    // }
+    // if (changeCounter >= 20){
+    //     changeCounter = 0;
+    //     justChanged = true;
+    // }
+    // changeCounter++;
     glColor3f(red, green, blue);
 }

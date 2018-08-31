@@ -21,6 +21,9 @@ SkyBox::~SkyBox() {
 
 
 void SkyBox::render() {
+
+    glPushMatrix();
+    glTranslatef(0, 0, -64);
     if (useWireframe) {
         glDisable(GL_TEXTURE_2D);
         glColor3f(0, 0, 0);
@@ -48,4 +51,6 @@ void SkyBox::render() {
         glDisable(GL_TEXTURE_2D);
         glEnable(GL_LIGHTING);
     }
+    glPopMatrix();
+
 }

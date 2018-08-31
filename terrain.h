@@ -27,6 +27,8 @@ private:
 
 public:
 
+    int currentStage = 1;
+
     Terrain();
 
     void render();

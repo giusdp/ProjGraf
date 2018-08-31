@@ -9,11 +9,13 @@
 #include "collectable.h"
 #include "camera.h"
 #include "finishline.h"
+#include "minimap.h"
 
 #define FREE_MODE 0
 #define PLAY_MODE 1
 
 bool useWireframe = false;
+bool useHeadlight = true;
 
 int scrW = 800, scrH = 600; // altezza e larghezza viewport (in pixels)
 
@@ -37,6 +39,7 @@ HUD *hud;
 Camera *camera;
 FinishLine *finishLine;
 std::vector<Collectable *> collectables;
+MiniMap *miniMap;
 
 void incrCollectedItems()
 {
@@ -45,9 +48,9 @@ void incrCollectedItems()
     hud->justCollected = true;
     if (hud->collectedItems == 10)
     {
-        hud->stage++;
         hud->stageChanged = true;
         terrain->changeTerrain(hud->stage);
+        hud->stage++;
         finishLine->reset();
     }
 }
@@ -60,6 +63,9 @@ void reset()
         c->randomSpawn();
 }
 
+float tmpv[4] = {0, 10, -2, 0}; // ultima comp=0 => luce direzionale
+int lightCounter = 0;
+float xLight = 0, yLight = 0;
 /* Esegue il Rendering della scena */
 void render(SDL_Window *win)
 {
@@ -89,13 +95,32 @@ void render(SDL_Window *win)
     glClearColor(1, 1, 1, 1);
 
     // setto la posizione luce
-    float tmpv[4] = {0, 1, 2, 0}; // ultima comp=0 => luce direzionale
+    // float d[3] = {0,0,1};
+    // float angle[1] = {45.0f};
+    // float e[1] = {0.0};
+    if (lightCounter >= 50)
+    {
+        if (hud->stage >= 4)
+        {
+            xLight += 0.1;
+            yLight += 0.1;
+            tmpv[0] = cosf(xLight) * 10;
+            tmpv[1] = sinf(yLight) * 10;
+            lightCounter = 0;
+            // std::cout << tmpv[0] << std::endl;
+        }
+    }
+
     glLightfv(GL_LIGHT0, GL_POSITION, tmpv);
+    lightCounter++;
+    // glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, d);
+    // glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, angle);
+    // glLightfv(GL_LIGHT0, GL_SPOT_EXPONENT, e);
 
     // settiamo matrice di vista
     camera->update();
 
-    static float tmpcol[4] = {1, 1, 1, 1};
+    static float tmpcol[4] = {1,1,1, 1};
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpcol);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 127);
 
@@ -109,6 +134,7 @@ void render(SDL_Window *win)
         c->render();
     finishLine->render();
     hud->render();
+    miniMap->render();
 
     // attendiamo la fine della rasterizzazione di
     // tutte le primitive mandate
@@ -196,6 +222,7 @@ int main(int argc, char *argv[])
     collectables.push_back(new Collectable((char *)"Assets/PersonalPic.jpeg"));
     collectables.push_back(new Collectable((char *)"Assets/PersonalPicAndrew.jpeg"));
     //collectables.push_back(new Collectable((char *)"Assets/PersonalPic.jpeg"));
+    miniMap = new MiniMap(plane, finishLine);
 
     //Creo il controller per gestire gli input con il Command Pattern
     Controller controller = Controller();
@@ -259,6 +286,7 @@ int main(int argc, char *argv[])
                             scrH = e.window.data2;
                             glViewport(0, 0, scrW, scrH);
                             //hud->resize(scrW, scrH);
+                            // miniMap->update();
                             render(win);
                             break;
                         }
@@ -325,7 +353,7 @@ int main(int argc, char *argv[])
     std::cout << "Uscito dal game loop." << std::endl;
 
     // *** CLEANING UP ****
-    delete plane, terrain, sky, hud, camera, finishLine;
+    delete terrain, sky, hud, camera, finishLine, miniMap, plane;
     for (auto c : collectables)
         delete c;
     collectables.clear();

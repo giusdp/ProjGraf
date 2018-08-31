@@ -22,7 +22,7 @@ HUD::HUD(int scrW, int scrH, TTF_Font *font) : scrW(scrW), scrH(scrH), font(font
     stageRect.h = 1;
 
     itemsRect.x = 5;
-    itemsRect.y = 0;
+    itemsRect.y = 3;
     itemsRect.w = 3;
     itemsRect.h = 1;
 
