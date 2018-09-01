@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "finishline.h"
 #include "minimap.h"
+#include <GL/freeglut.h>
 
 #define FREE_MODE 0
 #define PLAY_MODE 1
@@ -120,7 +121,7 @@ void render(SDL_Window *win)
     // settiamo matrice di vista
     camera->update();
 
-    static float tmpcol[4] = {1,1,1, 1};
+    static float tmpcol[4] = {1, 1, 1, 1};
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpcol);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 127);
 
@@ -188,6 +189,7 @@ int main(int argc, char *argv[])
     mainContext = SDL_GL_CreateContext(win);
 
     std::cout << "SDL avviato e finestra con contesto creati." << std::endl;
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);

@@ -52,7 +52,7 @@ class Camera
             break;
         case PLAY_MODE:
             glTranslatef(0, -7, -eyeDist);
-            glRotatef(viewBeta, 1, 0, 0);
+            //glRotatef(viewBeta, 1, 0, 0);
 
             //glRotatef(viewAlpha, 0,1,0);
             break;

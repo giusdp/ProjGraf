@@ -26,7 +26,7 @@ else
 $(info Linux detected)
 #framework presenti solo nel caso MAC OS
 FRMPATH =
-LIBS = -lGL -lGLU -lSDL2 -lSDL2_ttf -lSDL2_image -lm
+LIBS = -lGL -lGLU -lSDL2 -lSDL2_ttf -lSDL2_image -lglut -lm
 endif
 endif
 

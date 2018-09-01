@@ -53,7 +53,7 @@ private:
   const std::string scoreText = "SCORE: ";
   const std::string stageText = "STAGE: ";
   const std::string itemsText = "ITEMS: ";
-  const std::string gameOverText1 = "GAME OVER!    YOUR SCORE IS ";
+  const std::string gameOverText1 = "GAME OVER! YOUR SCORE IS ";
   const std::string gameOverText2 = "Press R to start again!"; 
 
   Texture *textureScore;

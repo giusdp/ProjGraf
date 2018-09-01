@@ -11,18 +11,18 @@ SDL_Color scoreColor = {255, 0, 20, 0},
 HUD::HUD(int scrW, int scrH, TTF_Font *font) : scrW(scrW), scrH(scrH), font(font)
 {
 
-    scoreRect.x = 5;
-    scoreRect.y = 12;
+    scoreRect.x = 6;
+    scoreRect.y = 13.5;
     scoreRect.w = 3;
     scoreRect.h = 1;
 
-    stageRect.x = -8;
-    stageRect.y = 12;
+    stageRect.x = -9;
+    stageRect.y = 13.5;
     stageRect.w = 2;
     stageRect.h = 1;
 
     itemsRect.x = 5;
-    itemsRect.y = 3;
+    itemsRect.y = 3.5;
     itemsRect.w = 3;
     itemsRect.h = 1;
 
