@@ -16,7 +16,6 @@
 #define PLAY_MODE 1
 
 bool useWireframe = false;
-bool useHeadlight = true;
 
 int scrW = 800, scrH = 600; // altezza e larghezza viewport (in pixels)
 

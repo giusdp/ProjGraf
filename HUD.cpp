@@ -26,6 +26,11 @@ HUD::HUD(int scrW, int scrH, TTF_Font *font) : scrW(scrW), scrH(scrH), font(font
     itemsRect.w = 3;
     itemsRect.h = 1;
 
+    instructionsRect.x = -9;
+    instructionsRect.y = 0;
+    instructionsRect.w = 12;
+    instructionsRect.h = 1;
+
     gameOverRect.x = -8;
     gameOverRect.y = 7;
     gameOverRect.w = 15;
@@ -45,6 +50,10 @@ HUD::HUD(int scrW, int scrH, TTF_Font *font) : scrW(scrW), scrH(scrH), font(font
     SDL_Surface *surfaceTextItem = TTF_RenderText_Blended(font, itemsText.c_str(), itemsColor);
     textureItems = new Texture();
     textureItems->loadTexture2D(surfaceTextItem, true);
+
+    SDL_Surface *surfaceInstrItem = TTF_RenderText_Blended(font, instructionsText.c_str(), scoreColor);
+    textureInstructions = new Texture();
+    textureInstructions->loadTexture2D(surfaceInstrItem, true);
 }
 
 void HUD::resize(int w, int h)
@@ -67,10 +76,10 @@ void HUD::gameOver()
 
     SDL_Surface *surfaceText2 = TTF_RenderText_Blended(font, gameOverText2.c_str(), scoreColor);
     textureGameOver2->loadTexture2D(surfaceText2, true);
-
 }
 
-void HUD::reset(){
+void HUD::reset()
+{
     isGameOver = false;
     stageChanged = true;
     stage = 1;
@@ -126,6 +135,10 @@ void HUD::render()
 
     glColor3f(1, 1, 1);
 
+    // INSTRUCTIONS
+    glBindTexture(GL_TEXTURE_2D, textureInstructions->getTextureID());
+    drawQuad(instructionsRect.x, instructionsRect.y, instructionsRect.w, instructionsRect.h);
+
     // SCORE
     glBindTexture(GL_TEXTURE_2D, textureScore->getTextureID());
     drawQuad(scoreRect.x, scoreRect.y, scoreRect.w, scoreRect.h);
@@ -144,9 +157,9 @@ void HUD::render()
         drawQuad(gameOverRect.x, gameOverRect.y, gameOverRect.w, gameOverRect.h);
 
         glBindTexture(GL_TEXTURE_2D, textureGameOver2->getTextureID());
-        drawQuad(gameOverRect.x+3, gameOverRect.y-2, gameOverRect.w-5, gameOverRect.h-1);
+        drawQuad(gameOverRect.x + 3, gameOverRect.y - 2, gameOverRect.w - 5, gameOverRect.h - 1);
     }
-    
+
     glDisable(GL_TEXTURE_2D);
 
     glDisable(GL_BLEND);

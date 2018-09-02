@@ -41,7 +41,7 @@ public:
 
   virtual ~HUD()
   {
-    delete textureScore, textureStage, textureItems, textureGameOver, textureGameOver2;
+    delete textureInstructions, textureScore, textureStage, textureItems, textureGameOver, textureGameOver2;
   }
 
 private:
@@ -55,17 +55,20 @@ private:
   const std::string itemsText = "ITEMS: ";
   const std::string gameOverText1 = "GAME OVER! YOUR SCORE IS ";
   const std::string gameOverText2 = "Press R to start again!"; 
+  const std::string instructionsText = "WASD: Move, C: Play/Free mode, V: Wireframe"; 
 
   Texture *textureScore;
   Texture *textureStage;
   Texture *textureItems;
   Texture *textureGameOver;
   Texture *textureGameOver2;
+  Texture *textureInstructions;
 
   SDL_Rect scoreRect;
   SDL_Rect stageRect;
   SDL_Rect itemsRect;
   SDL_Rect gameOverRect;
+  SDL_Rect instructionsRect;
 
   void drawQuad(float x, float y, float w, float h);
 };

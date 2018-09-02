@@ -5,7 +5,6 @@
 
 extern int cameraType; // var globale esterna per fare i movimenti opportuni
 extern int scrW, scrH;
-extern bool useHeadlight;
 
 float turning_rotation_Z = 0, max_turn_Z = 20, turn_speed_Z = 0.5f;
 float turning_rotation_X, turn_speed_X = 0.4f, max_turn_X = 15;
@@ -238,9 +237,6 @@ void Plane::doStepPlayMode()
 void Plane::renderShipLight()
 {
     glPushMatrix();
-
-    if (useHeadlight)
-    {
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT1);
 
@@ -261,9 +257,6 @@ void Plane::renderShipLight()
 
         glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0);
         glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 1);
-    }
-    else
-        glDisable(GL_LIGHT1);
-
+    
     glPopMatrix();
 }
