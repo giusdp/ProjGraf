@@ -39,7 +39,7 @@ void Terrain::generateTerrain()
     }
 
     // Creo le facce mancanti, però così disegno più volte gli stessi vertici e linee.
-    // Per il lato destro e basso della griglia risolvo il problema della linea mancante
+    // Per il lato destro e basso della griglia risolvo il problema del lato mancante
     // a discapito del ridisegno dei vertici in comune delle facce.
     if (!useWireframe)
     {

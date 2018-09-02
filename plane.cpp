@@ -57,7 +57,7 @@ void Plane::Render()
     glColor3f(.3f, .3f, .3f);
     lowPolyPlane.RenderNxV();
 
-    glColor3f(1,1,1);
+    glColor3f(1, 1, 1);
     renderShipLight();
     glPopMatrix();
 }
@@ -237,30 +237,33 @@ void Plane::doStepPlayMode()
 
 void Plane::renderShipLight()
 {
-    
+    glPushMatrix();
+
     if (useHeadlight)
     {
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT1);
 
-        float col0[4] = {0.8, 0.8, 0.0, 1};
+        float col0[4] = {1,1,1, 1};
         glLightfv(GL_LIGHT1, GL_DIFFUSE, col0);
 
-        float col1[4] = {0.5, 0.5, 0.0, 1};
+        float col1[4] = {1,1,1, 1};
         glLightfv(GL_LIGHT1, GL_AMBIENT, col1);
 
-        float tmpPos[4] = {0,0,-1, 1}; // ultima comp=1 => luce posizionale
+        float tmpPos[4] = {0, -1, -1, 1}; // ultima comp=1 => luce posizionale
         glLightfv(GL_LIGHT1, GL_POSITION, tmpPos);
 
         float tmpDir[4] = {0, -1, -1, 0}; // ultima comp=1 => luce posizionale
         glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, tmpDir);
 
         glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 90);
-        glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100);
+        glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 64);
 
         glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0);
         glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 1);
     }
     else
         glDisable(GL_LIGHT1);
+
+    glPopMatrix();
 }
